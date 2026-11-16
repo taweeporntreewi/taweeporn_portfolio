@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JP Carry Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Red+Hat+Display:wght@500;700;800;900&family=Varela+Round&display=swap">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/brands.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/fontawesome.min.js"></script>
+<style>
+/* Layout: same frosted system as the homepage. Sticky contents rail on the left, long-form case study on the right. No pure white. */
+:root {
+  --bg: #F2F3F7; --surface: #F8F8FB;
+  --glass: rgba(248, 248, 251, .62); --glass-strong: rgba(248, 248, 251, .86); --edge: rgba(255, 255, 255, .78);
+  --line: rgba(30, 34, 51, .09); --ink: #1E2233; --muted: #555B6F;
+  --accent: #166C99; --accent-ink: #0F5478; --accent-soft: #D9EEF7; --good: #22704F;
+  --sky: #C9E5F6; --mint: #C9F0E2; --leaf: #D3F0DA;
+  --sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --round: 'Red Hat Display', 'Manrope', system-ui, sans-serif; --chat: 'Varela Round', 'Manrope', system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 40; background: var(--bg); }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 12px; }
+.sky { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.sky i { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .8; animation: drift 26s ease-in-out infinite alternate; }
+@keyframes drift { to { transform: translate(60px, 40px) scale(1.12); } }
+.page { position: static; }
+.wrap { max-width: 1160px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.glass { background: var(--glass); -webkit-backdrop-filter: blur(18px) saturate(1.35); backdrop-filter: blur(18px) saturate(1.35); border: 1px solid var(--edge); box-shadow: 0 10px 40px rgba(30, 34, 51, .06); }
+.progress { position: fixed; left: 0; top: env(safe-area-inset-top, 0px); height: 4px; width: 100%; z-index: 35; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); }
+
+/* nav */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; padding-block: 14px; }
+.navpill.glass, .mnav.glass { position: relative; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border: 1px solid rgba(255, 255, 255, .55); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 -1px 0 rgba(255, 255, 255, .25), 0 6px 24px rgba(30, 34, 51, .06); }
+.navpill.glass::before, .mnav.glass::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: linear-gradient(180deg, rgba(248, 248, 251, .28), rgba(248, 248, 251, .5)); -webkit-backdrop-filter: blur(44px) saturate(1.8); backdrop-filter: blur(44px) saturate(1.8); pointer-events: none; }
+.navpill { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 8px 8px 22px; border-radius: 999px; }
+.back { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: 15px; text-decoration: none; }
+.back span { display: inline-flex; width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft); align-items: center; justify-content: center; transition: transform .3s cubic-bezier(.3, 1.8, .5, 1); }
+.back:hover span { transform: translateX(-4px); }
+.brand { font-weight: 800; font-size: 16px; text-decoration: none; letter-spacing: -0.01em; }
+.links { display: flex; align-items: center; gap: 22px; font-size: 14px; font-weight: 600; }
+.links a { text-decoration: none; color: var(--muted); transition: color .2s; }
+.links a:hover { color: var(--ink); }
+.links a.cur { color: var(--accent-ink); font-weight: 800; background: var(--accent-soft); padding: 8px 14px; border-radius: 999px; margin-right: -8px; }
+.links a.cur span { display: inline-block; transition: transform .3s cubic-bezier(.3, 1.8, .5, 1); }
+.links a.cur:hover span { transform: translateX(-3px); }
+@media (max-width: 620px) { .links { gap: 12px; } .links .hide-sm { display: none; } }
+.menu-btn { display: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); align-items: center; justify-content: center; cursor: pointer; padding: 0; transition: transform .3s cubic-bezier(.3, 1.8, .5, 1); }
+.menu-btn:active { transform: scale(.92); }
+.menu-btn i { position: relative; width: 18px; height: 2px; border-radius: 2px; background: currentColor; transition: background .2s; }
+.menu-btn i::before, .menu-btn i::after { content: ""; position: absolute; left: 0; width: 18px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .35s cubic-bezier(.3, 1.6, .5, 1); }
+.menu-btn i::before { transform: translateY(-6px); }
+.menu-btn i::after { transform: translateY(6px); }
+.menu-btn[aria-expanded="true"] i { background: transparent; }
+.menu-btn[aria-expanded="true"] i::before { transform: rotate(45deg); }
+.menu-btn[aria-expanded="true"] i::after { transform: rotate(-45deg); }
+.mnav { margin-top: 8px; border-radius: 28px; padding: 8px; display: flex; flex-direction: column; gap: 2px; background: var(--glass-strong); }
+.mnav[hidden] { display: none; }
+.mnav:not([hidden]) { animation: mpop .4s cubic-bezier(.3, 1.6, .5, 1) both; transform-origin: 90% 0; }
+@keyframes mpop { from { opacity: 0; transform: translateY(-8px) scale(.96); } to { opacity: 1; transform: none; } }
+.mnav a { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-radius: 20px; text-decoration: none; font-weight: 800; font-size: 18px; color: var(--ink); }
+.mnav a:hover, .mnav a:focus-visible { background: var(--accent-soft); }
+.mnav a[aria-current] { color: var(--accent-ink); background: var(--accent-soft); }
+.mnav a span { color: var(--muted); font-weight: 700; }
+@media (max-width: 620px) { .links .hide-sm, .links .cur { display: none; } .menu-btn { display: inline-flex; } }
+@media (min-width: 621px) { .mnav { display: none !important; } }
+@media (prefers-reduced-motion: reduce) { .mnav:not([hidden]) { animation: none; } .menu-btn i::before, .menu-btn i::after { transition: none; } }
+.dark { display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: var(--surface) !important; border-radius: 999px; padding: 11px 18px; font-weight: 700; font-size: 14px; text-decoration: none; border: 0; cursor: pointer; transition: transform .25s cubic-bezier(.3, 1.7, .5, 1); }
+.dark:hover { transform: translateY(-2px) scale(1.03); }
+
+/* hero */
+.hero { padding-block: clamp(28px, 5vw, 64px) clamp(32px, 5vw, 56px); }
+.kick { font-size: 13px; font-weight: 800; letter-spacing: .12em; color: var(--muted); margin: 0 0 14px; }
+.title { font-family: var(--round); font-weight: 800; font-size: clamp(52px, 10vw, 128px); line-height: .92; letter-spacing: -0.035em; margin: 0; }
+.title span { color: var(--accent); }
+.intro { font-size: clamp(18px, 2vw, 22px); color: var(--muted); max-width: none; margin: 22px 0 0; text-wrap: pretty; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 10px; margin-top: 28px; }
+.fact { border-radius: 22px; padding: 14px 16px; }
+.fact small { display: block; font-size: 12px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
+.fact b { font-size: 15px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.chips span { font-size: 13px; font-weight: 700; padding: 7px 13px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
+
+/* image placeholders */
+.shot { position: relative; display: block; width: 100%; border: 1px solid var(--edge); border-radius: 24px; overflow: hidden; background: linear-gradient(160deg, var(--sky), var(--surface) 60%, var(--leaf)); aspect-ratio: 16 / 10; cursor: zoom-in; padding: 0; text-align: left; transition: transform .4s cubic-bezier(.3, 1.6, .5, 1); }
+.shot:hover { transform: translateY(-4px); }
+.shot::before { content: ""; position: absolute; inset: 8% 6% -2%; border-radius: 16px 16px 0 0; background: rgba(248, 248, 251, .88); box-shadow: 0 12px 30px rgba(30, 34, 51, .08); }
+.shot::after { content: ""; position: absolute; left: calc(6% + 16px); top: calc(8% + 16px); width: 40%; height: 10px; border-radius: 99px; background: rgba(30, 34, 51, .1); box-shadow: 0 26px 0 -1px rgba(30, 34, 51, .06), 0 52px 0 -1px rgba(30, 34, 51, .06); }
+.shot .lab { position: absolute; left: 50%; top: 56%; transform: translate(-50%, -50%); z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; width: 80%; }
+.shot .lab b { font-size: clamp(14px, 1.6vw, 17px); }
+.shot .lab small { font-size: 12px; font-weight: 700; color: var(--muted); padding: 4px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink); overflow-wrap: anywhere; }
+.shot.tall { aspect-ratio: 4 / 3; }
+.shot.wide { aspect-ratio: 21 / 9; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+.grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; }
+
+/* layout with contents rail */
+.layout { display: flex; flex-wrap: wrap; gap: clamp(20px, 4vw, 48px); align-items: flex-start; padding-bottom: 60px; }
+.toc { flex: 1 1 210px; max-width: 240px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 96px); border-radius: 26px; padding: 18px; }
+.toc p { margin: 0 0 8px; font-size: 12px; font-weight: 800; letter-spacing: .1em; color: var(--muted); }
+.toc a { display: block; padding: 7px 12px; border-radius: 12px; font-size: 14px; font-weight: 700; text-decoration: none; color: var(--muted); transition: background .2s, color .2s, transform .25s cubic-bezier(.3, 1.8, .5, 1); }
+.toc a:hover { color: var(--ink); transform: translateX(3px); }
+.toc a.on { background: var(--accent-soft); color: var(--accent-ink); }
+.content { --sec: clamp(44px, 6vw, 64px); flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: var(--sec); }
+@media (max-width: 860px) { .toc { display: none; } }
+section { scroll-margin-top: 100px; }
+.h2 { font-family: var(--round); font-weight: 700; font-size: clamp(28px, 4vw, 44px); line-height: 1.05; letter-spacing: -0.035em; margin: 0 0 18px; text-wrap: balance; }
+.h3 { font-size: 20px; margin: 0 0 6px; }
+.p { margin: 0 0 14px; font-size: 17px; color: var(--muted); max-width: none; }
+.cards3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 12px; }
+.ch { border-radius: 26px; padding: 22px; display: flex; flex-direction: column; gap: 8px; transition: transform .35s cubic-bezier(.3, 1.7, .5, 1); }
+.ch:hover { transform: translateY(-5px) rotate(-.6deg); }
+.ch .n { font-family: var(--round); font-weight: 800; font-size: 34px; line-height: 1; color: var(--accent); }
+.ch p { margin: 0; font-size: 15px; color: var(--muted); }
+.list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 10px; }
+.list li { display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 20px; background: var(--glass-strong); border: 1px solid var(--line); font-weight: 600; font-size: 15px; }
+.list li::before { content: "✓"; flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--mint); color: var(--good); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; }
+.screen { display: flex; flex-direction: column; gap: 12px; padding-top: 26px; border-top: 1px solid var(--line); }
+.grp::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.gsec { display: flex; flex-direction: column; gap: 34px; }
+.grp { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 98px); z-index: 20; display: flex; align-items: center; gap: 12px; margin: 0; pointer-events: none; }
+.grp span { display: inline-flex; align-items: center; min-height: 34px; padding: 0 14px; border-radius: 999px; font-size: 12.5px; font-weight: 800; letter-spacing: .12em; color: var(--accent-ink); background: var(--accent-soft); border: 1px solid transparent; transition: box-shadow .25s, background-color .25s, border-color .25s; pointer-events: auto; }
+.grp::after { transition: opacity .2s; }
+.grp.stuck::after { opacity: 0; }
+.grp.stuck span { background: rgba(248, 248, 251, .95); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); border-color: var(--line); box-shadow: 0 10px 26px rgba(30, 34, 51, .12); }
+.grp + .screen { border-top: 0; padding-top: 0; }
+.screen:first-of-type { border-top: 0; padding-top: 0; }
+.screen .meta { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; }
+.screen .meta p { margin: 0; color: var(--muted); font-size: 15px; max-width: none; }
+.tag { font-size: 12px; font-weight: 800; letter-spacing: .06em; color: var(--accent-ink); background: var(--accent-soft); border-radius: 999px; padding: 4px 10px; }
+.quote { border-radius: 26px; padding: clamp(18px, 3vw, 28px); border-left: 4px solid var(--accent); }
+.quote p { margin: 0; font-weight: 700; font-size: clamp(17px, 1.7vw, 19px); line-height: 1.55; color: var(--ink); max-width: none; text-wrap: pretty; }
+.next { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; border-radius: 32px; padding: clamp(22px, 4vw, 36px); text-decoration: none; transition: transform .4s cubic-bezier(.3, 1.6, .5, 1); }
+.next:hover { transform: translateY(-5px); }
+.next small { display: block; font-size: 12px; font-weight: 800; letter-spacing: .1em; color: var(--muted); }
+.next b { font-family: var(--round); font-weight: 800; font-size: clamp(28px, 4vw, 44px); letter-spacing: -0.035em; }
+.next .go { width: 60px; height: 60px; border-radius: 50%; background: var(--accent); color: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 22px; transition: transform .35s cubic-bezier(.3, 1.8, .5, 1); }
+.next:hover .go { transform: translateX(6px) rotate(-10deg); }
+.pn { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 12px; }
+.pn .next { flex-wrap: nowrap; gap: 14px; padding: 14px 18px; border-radius: 22px; }
+.pn .next:hover { transform: translateY(-3px); }
+.pn .next small { font-size: 11px; }
+.pn .next b { font-family: var(--sans); font-weight: 800; font-size: 18px; letter-spacing: -0.01em; }
+.pn .next .go { flex: none; width: 38px; height: 38px; font-size: 16px; }
+.pn .next:hover .go { transform: translateX(4px); }
+.pn .next.prev:hover .go { transform: translateX(-4px); }
+.next.prev { justify-content: flex-start; }
+.next.prev:hover .go { transform: translateX(-6px) rotate(10deg); }
+.cta { border-radius: 36px; padding: clamp(24px, 5vw, 48px); display: flex; flex-direction: column; gap: 22px; position: relative; overflow: hidden; scroll-margin-top: 100px; }
+.cta::before { content: ""; position: absolute; width: 320px; height: 320px; right: -90px; top: -120px; border-radius: 50%; background: radial-gradient(circle, var(--mint), transparent 70%); pointer-events: none; }
+.cta .who { display: flex; align-items: center; gap: 12px; position: relative; }
+.cta .av { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(140deg, var(--accent), #2E9A6A); color: var(--surface); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex: none; }
+.cta .who b { font-size: 15px; }
+.cta .who small { display: block; font-size: 13px; color: var(--muted); }
+.cta .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2E9A6A; margin-right: 6px; box-shadow: 0 0 0 4px rgba(46, 154, 106, .18); animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 7px rgba(46, 154, 106, 0); } }
+.cta-h { position: relative; margin: 0; font-family: var(--round); font-weight: 800; font-size: clamp(30px, 5vw, 52px); line-height: 1; letter-spacing: -0.035em; text-wrap: balance; }
+.cta-h span { color: var(--accent); }
+.cta-row { position: relative; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.cta .mail { display: inline-flex; align-items: center; gap: 10px; padding: 6px 6px 6px 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-weight: 700; font-size: 15px; max-width: 100%; }
+.cta .mail > span:not(.mic) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+@media (max-width: 420px) { .cta .mail .mic { display: none; } .cta { padding: 22px 16px; } .cta .mail { font-size: 14px; padding-left: 14px; gap: 6px; } .cta .copy { padding: 8px 11px; } }
+.cta .copy { border: 0; background: var(--accent-soft); color: var(--accent-ink); font-weight: 800; font-size: 13px; padding: 8px 14px; border-radius: 999px; cursor: pointer; flex: none; }
+@media (prefers-reduced-motion: reduce) { .cta .dot { animation: none; } }
+.mic { display: inline-flex; color: var(--accent-ink); flex: none; }
+.chipset { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+.chipset span { display: inline-flex; align-items: center; gap: 8px; padding: 8px 15px 8px 8px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 14px; font-weight: 800; }
+.chipset span i { font-style: normal; font-size: 11px; font-weight: 800; letter-spacing: .06em; color: var(--accent-ink); background: var(--accent-soft); padding: 4px 9px; border-radius: 999px; }
+.contrib { margin-top: 18px; }
+.contrib .cl { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
+.contrib div { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.contrib div span { font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); border-color: color-mix(in srgb, var(--accent) 35%, transparent); color: var(--accent-ink); }
+.ic.li.sm { font-size: 16px; }
+.ic { flex: none; width: 42px; height: 42px; border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; background: var(--accent-soft); color: var(--accent-ink); transition: transform .35s cubic-bezier(.3, 1.8, .5, 1), background .2s, color .2s; }
+a:hover > .ic { transform: rotate(-8deg) scale(1.08); background: var(--accent); color: var(--surface); }
+.ic.li { background: #0A66C2; color: #F8F8FB; font-size: 19px; }
+a:hover > .ic.li { background: #004182; color: #F8F8FB; }
+.ic.li svg.svg-inline--fa { width: 1em; height: 1em; }
+.ic.li .svg-inline--fa ~ .fb { display: none; }
+.mic { display: inline-flex; color: var(--accent-ink); flex: none; }
+.copyin { flex: none; border: 0; background: var(--accent-soft); color: var(--accent-ink); font: inherit; font-weight: 800; font-size: 14px; padding: 10px 16px; border-radius: 999px; cursor: pointer; transition: transform .25s cubic-bezier(.3, 1.7, .5, 1), background .2s; }
+.copyin:hover { transform: scale(1.05); background: #C7E5F3; }
+.pc { display: flex; flex-wrap: wrap; border-radius: 36px; background: var(--glass); -webkit-backdrop-filter: blur(18px) saturate(1.35); backdrop-filter: blur(18px) saturate(1.35); border: 1px solid var(--edge); box-shadow: 0 10px 40px rgba(30, 34, 51, .06); overflow: hidden; }
+.pc-msg { flex: 1 1 440px; padding: clamp(24px, 4.4vw, 52px); border-right: 1px dashed var(--line); }
+.pc-msg p { margin: 0; }
+.pc-hi { font-family: var(--chat); font-size: 20px; color: var(--accent-ink); }
+.pc-h { font-family: var(--round); font-weight: 700; font-size: clamp(32px, 5vw, 56px); line-height: 1.02; letter-spacing: -0.035em; margin: 10px 0 16px; text-wrap: balance; }
+.pc-p { color: var(--muted); font-size: 17px; max-width: none; }
+.pc-sig { font-family: var(--chat); font-size: 20px; color: var(--accent-ink); margin-top: 22px !important; }
+.pc-addr { flex: 1 1 400px; padding: clamp(24px, 4.4vw, 48px); display: flex; flex-direction: column; }
+.stamp { align-self: flex-end; width: 78px; height: 92px; border: 1.5px dashed rgba(22, 108, 153, .45); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--accent-ink); font-weight: 800; font-size: 11px; letter-spacing: .06em; margin-bottom: 14px; background: var(--accent-soft); transform: rotate(3deg); }
+.stamp b { font-family: var(--round); font-size: 22px; letter-spacing: -0.02em; }
+.ln { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--line); font-weight: 700; font-size: 16px; color: inherit; text-decoration: none; }
+.ln .lt { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.ln small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
+.ln .addr { display: block; font-family: var(--sans); font-weight: 700; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: clip; }
+.pc-addr, .pc-msg { min-width: 0; }
+.copyic { flex: none; width: 36px; height: 36px; margin-right: -9px; border: 0; border-radius: 12px; background: transparent; color: var(--muted); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; transition: background .2s, color .2s, transform .3s cubic-bezier(.3, 1.8, .5, 1); }
+.copyic:active svg { transform: scale(.88); }
+.copyic .ck { display: none; }
+.copyic.ok { color: var(--good); }
+.copyic.ok .cp { display: none; }
+.copyic.ok .ck { display: block; }
+@media (max-width: 400px) { .ln { gap: 10px; } .pc-addr { padding-left: 16px; padding-right: 16px; } .ln .ic.sm { width: 30px; height: 30px; border-radius: 10px; } .ln .ic.sm svg { width: 16px; height: 16px; } }
+
+.ln .go { color: var(--muted); font-weight: 800; transition: transform .3s cubic-bezier(.3, 1.8, .5, 1), color .2s; }
+a.ln:hover .go { transform: translateX(4px); color: var(--accent); }
+a.ln:hover .lt { color: var(--accent-ink); }
+.ic.sm { width: 34px; height: 34px; border-radius: 11px; }
+.ic.sm svg { width: 18px; height: 18px; }
+.ic.li.sm { font-size: 16px; }
+.pc-addr .status { margin: 0; }
+.pc.compact .pc-msg { display: flex; flex-direction: column; justify-content: center; }
+.pc.compact .pc-h { margin-bottom: 0; }
+.pc.compact .pc-addr { justify-content: center; padding-block: clamp(18px, 3vw, 32px); }
+.pc.compact .pc-msg { padding-block: clamp(22px, 3.4vw, 40px); }
+.pc.compact .stamp { display: none; }
+.pc.compact .pc-h { font-size: clamp(30px, 4vw, 46px); }
+.pc.compact .ln:last-child { border-bottom: 0; }
+.pc { container: pc / inline-size; }
+@container pc (max-width: 839.98px) { .pc-msg { border-right: 0; border-bottom: 1px dashed var(--line); } .stamp { position: absolute; right: 18px; top: -62px; width: 70px; height: 84px; } .pc-addr { position: relative; padding-top: 18px; } .pc-msg { padding-right: 100px; } }
+@media (max-width: 420px) { .pc-msg { padding-right: 24px; } .stamp { display: none; } }
+/* contact postcard keeps the site theme */
+.pc { --accent: #166C99; --accent-ink: #0F5478; --accent-soft: #D9EEF7; }
+.note { font-size: 13px; color: var(--muted); border-radius: 18px; padding: 12px 16px; border: 1px dashed rgba(22, 108, 153, .35); background: rgba(217, 238, 247, .4); }
+footer { padding-block: 24px 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); }
+/* reveal */
+.rv { animation: rise .8s cubic-bezier(.3, 1.4, .5, 1) both; animation-timeline: view(); animation-range: entry 0% entry 45%; }
+@keyframes rise { from { opacity: .001; transform: translateY(26px) scale(.98); } to { opacity: 1; transform: none; } }
+@supports not (animation-timeline: view()) { .rv { animation: none; } }
+/* lightbox */
+.lb { border: 0; padding: 0; background: transparent; max-width: min(1080px, 94vw); width: 100%; }
+.lb::backdrop { background: rgba(30, 34, 51, .45); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.lb-in { background: var(--surface); border-radius: 30px; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+.lb[open] .lb-in { animation: pop .5s cubic-bezier(.3, 1.6, .5, 1) both; }
+@keyframes pop { 0% { opacity: 0; transform: scale(.85) translateY(20px); } 60% { opacity: 1; transform: scale(1.02); } 100% { transform: none; } }
+.lb-art .shot { cursor: default; aspect-ratio: 16 / 10; }
+.lb-art .shot:hover { transform: none; }
+.lb-cap { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 0 8px 4px; }
+@media (prefers-reduced-motion: reduce) { .sky i, .rv, .lb[open] .lb-in { animation: none !important; } .shot, .ch, .next, .toc a, .back span, .dark { transition: none; } }
+
+
+/* email row: whole row copies, hover matches the phone and LinkedIn rows */
+.ln:has(.copyic) { position: relative; cursor: pointer; }
+.copyic::after { content: ""; position: absolute; inset: 0; }
+.copyic:focus-visible { outline: none; }
+.ln:has(.copyic:focus-visible) { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 12px; }
+.ln:has(.copyic:hover) > .ic, .ln:has(.copyic:focus-visible) > .ic { transform: rotate(-8deg) scale(1.08); background: var(--accent); color: var(--surface); }
+.ln:has(.copyic:hover) .lt { color: var(--accent-ink); }
+.copyic svg { transition: transform .3s cubic-bezier(.3, 1.8, .5, 1); }
+.ln:has(.copyic:hover) .copyic:not(.ok) { color: var(--accent); }
+.ln:has(.copyic:hover) .copyic:not(.ok) svg { transform: translateX(4px); }
+.ln .tip { position: absolute; right: -8px; bottom: calc(100% - 10px); z-index: 3; background: var(--ink); color: var(--surface); font-size: 12px; font-weight: 800; letter-spacing: .01em; padding: 5px 11px; border-radius: 999px; white-space: nowrap; pointer-events: none; opacity: 0; transform: translateY(6px) scale(.9); transform-origin: 80% 100%; transition: opacity .18s, transform .3s cubic-bezier(.3, 1.8, .5, 1); }
+.ln:has(.copyic.tipon) .tip { opacity: 1; transform: none; }
+/* phones: keep Let's talk and the menu button close together */
+@media (max-width: 620px) { .links { gap: 8px; } }
+.pc-loc { margin: 6px 0 0 !important; font-size: 13.5px; font-weight: 600; line-height: 1.4; color: var(--muted); padding-left: 2px; }
+.pc.compact .pc-sig { margin-top: 16px !important; }
+/* Reflection as plain text, the first sentence a little larger and darker */
+.lead-r { margin: 0 0 12px; font-size: 19px; line-height: 1.55; font-weight: 600; color: var(--ink); max-width: none; }
+/* the closing trio (Reflection, Previous/Next, contact) sits tighter than the main sections */
+.content > .pn { margin-top: 0; }
+.content > .pn + #contact { margin-top: calc(clamp(24px, 3.4vw, 36px) - var(--sec)); }
+/* no divider under the last contact row, so the list sits optically centred */
+.pc-addr > .ln:last-child { border-bottom: 0; }
+/* nav bar and mobile menu: the frosted blur sits on the element itself, not on ::before. Safari (iPhone, iPad, Mac) skips a blur on a pseudo-element behind its parent, and the menu's open animation would block it in every browser */
+.navpill.glass, .mnav.glass { -webkit-backdrop-filter: blur(44px) saturate(1.8); backdrop-filter: blur(44px) saturate(1.8); }
+.navpill.glass { background: linear-gradient(180deg, rgba(248, 248, 251, .28), rgba(248, 248, 251, .5)); }
+.mnav.glass { background: linear-gradient(180deg, rgba(248, 248, 251, .62), rgba(248, 248, 251, .78)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), 0 16px 40px rgba(30, 34, 51, .14); }
+.navpill.glass::before, .mnav.glass::before { content: none; }
+/* real screenshots: same frame as the placeholders, cropped from the top; the lightbox shows the whole image */
+.shot.img { aspect-ratio: 4 / 3; background: var(--surface); border-color: var(--line); }
+.shot.img::before, .shot.img::after { content: none; }
+.shot.img img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+.shot.img.fit { aspect-ratio: auto; }
+.shot.img.fit img { height: auto; }
+.shot.img.phone { aspect-ratio: 9 / 19.5; max-width: none; border-radius: 18px; }
+.grid4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 12px; }
+.grid4.phones { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 560px) { .grid4.phones { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -16px; padding: 0 16px 6px; scrollbar-width: none; } .grid4.phones::-webkit-scrollbar { display: none; } .grid4.phones .shot { flex: 0 0 42%; scroll-snap-align: start; } }
+.lb-scroll { max-height: min(78vh, 900px); overflow: auto; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); }
+.lb-scroll img { display: block; width: 100%; height: auto; }
+.lb-scroll.phonefit { display: flex; justify-content: center; align-items: flex-start; overflow: hidden; padding: 16px; background: linear-gradient(160deg, var(--sky), var(--surface) 60%, var(--leaf)); }
+.lb-scroll.phonefit img { width: auto; height: calc(min(78vh, 900px) - 34px); max-width: 100%; border-radius: 22px; border: 1px solid var(--line); box-shadow: 0 18px 40px rgba(30, 34, 51, .16); }
+.lb-scroll.phonefit.tall { overflow: auto; }
+.lb-scroll.phonefit.tall img { height: auto; width: min(360px, 100%); }
+.lb-scroll.narrow img { width: auto; max-width: 100%; margin: 0 auto; }
+/* keep the nav bar above everything: page content lives in its own layer below the header (Safari can otherwise paint blurred or sticky cards over a sticky header) */
+main { position: relative; z-index: 0; }
+.top { z-index: 50; }
+@media (max-width: 340px) { .ln .ic.sm { display: none; } }
+/* the open menu floats over the page instead of pushing it down */
+.top > .wrap { position: relative; }
+.mnav.glass { position: absolute; top: 100%; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); margin-top: 8px; z-index: 2; }
+.dl-ic { flex: none; }
+.shot.dk { background: linear-gradient(160deg, #2C3A52, #1E2233 60%, #1F3B35); }
+.shot.dk::before { background: rgba(44, 50, 70, .92); }
+.shot.dk::after { background: rgba(248, 248, 251, .16); box-shadow: 0 26px 0 -1px rgba(248, 248, 251, .08), 0 52px 0 -1px rgba(248, 248, 251, .08); }
+.shot.dk .lab b { color: #F2F3F7; }
+.shot.phone { aspect-ratio: 9 / 16; max-width: 300px; justify-self: center; }
+.stage { display: flex; flex-direction: column; gap: 12px; }
+.stage + .stage { margin-top: 30px; }
+.grid4.phones.n2 { grid-template-columns: repeat(2, minmax(0, 240px)); justify-content: center; gap: 16px; }
+.grid4.phones.n5 { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.grid4.phones.n10 { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.grid4.phones.n8 { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.grid4.phones.n3 { grid-template-columns: repeat(3, minmax(0, 220px)); justify-content: center; }
+.shot.img.phone { aspect-ratio: 1712 / 3248; }
+.grid4.phones.n8 { max-width: 780px; margin-inline: auto; width: 100%; }
+</style>
+<style>
+/* project palette */
+:root { --accent: #2E6DC0; --accent-ink: #235291; --accent-soft: #DAE6F6; --sky: #CFE3FA; --leaf: #DAE6F6; }
+/* closing nav + contact card keep the site theme */
+.pn, .cta { --accent: #166C99; --accent-ink: #0F5478; --accent-soft: #D9EEF7; }
+.cover { margin: 28px 0 0; border-radius: 28px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 18px 50px rgba(30, 34, 51, .12); background: var(--surface); }
+.cover img { display: block; width: 100%; height: auto; }
+</style>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
+<div class="sky" aria-hidden="true">
+<i style="width:520px;height:520px;right:-140px;top:-160px;background:var(--leaf)"></i>
+<i style="width:480px;height:480px;left:-160px;top:45vh;background:var(--sky);animation-delay:-8s"></i>
+<i style="width:520px;height:520px;right:-180px;top:150vh;background:var(--mint);animation-delay:-14s"></i>
+</div>
+
+<div class="page">
+<header class="top"><div class="wrap">
+<nav class="navpill glass" aria-label="Main">
+<a class="brand" href="../">Taweeporn</a>
+<div class="links"><a class="cur" href="../#work" aria-current="page"><span aria-hidden="true">←</span> Work</a><a class="hide-sm" href="../#beyond">Visuals</a><a class="hide-sm" href="../about/">About</a><a class="dark" href="#contact">Let's talk</a><button type="button" class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mnav" aria-label="Open menu"><i aria-hidden="true"></i></button></div>
+</nav>
+<nav class="mnav glass" id="mnav" aria-label="Menu" hidden><a href="../#work" aria-current="page">Work<span aria-hidden="true">→</span></a><a href="../#beyond">Visuals<span aria-hidden="true">→</span></a><a href="../about/">About<span aria-hidden="true">→</span></a></nav>
+</div></header>
+
+<main class="wrap">
+<section class="hero" id="top">
+<p class="kick">03 / 04 · CROSS-BORDER LOGISTICS PLATFORM</p>
+<h1 class="title">JP <span>Carry</span></h1>
+<p class="intro">Proxy buying and parcel forwarding between Japan and Thailand in one platform, with a customer portal and an admin dashboard.</p><div class="chipset">
+<span><i>ROLE</i>Sole UX/UI Designer</span>
+<span><i>TEAM</i>UX/UI Designer · Devs</span>
+<span><i>DURATION</i>Jun 2024 – Apr 2025</span>
+<span><i>PLATFORM</i>Desktop · Mobile</span>
+<span><i>MODULES</i>Customer portal · Admin</span>
+<span><i>SCREENS</i>150+ responsive</span>
+</div><div class="contrib"><span class="cl">WHAT I DID</span><div><span>UX Research</span><span>Information Architecture</span><span>Wireframing</span><span>Prototyping</span><span>UI Design</span><span>UI Library</span><span>Responsive Design</span><span>Brand Identity</span><span>Graphic Design</span><span>Developer Handoff</span></div></div>
+<figure class="cover"><img src="cover.webp" alt="JP Carry cover: UX process boards and the website with the JP Carry logo" width="1000" height="430"></figure></section>
+<div class="layout">
+<aside class="toc glass" aria-label="On this page"><p>ON THIS PAGE</p><a href="#overview">Overview</a><a href="#challenges">Key challenges</a><a href="#role">My responsibilities</a><a href="#process">Design process</a><a href="#solution">Final solution</a><a href="#collab">Collaboration</a><a href="#reflection">Reflection</a></aside>
+<div class="content">
+<section id="overview" class="rv"><h2 class="h2">Overview</h2><p class="p"><b style="color:var(--ink)">JP Carry</b> is a cross-border logistics platform that simplifies proxy buying and parcel forwarding between Japan and Thailand. It includes a customer portal for placing service requests and tracking orders, and an admin dashboard for managing daily operations.</p><p class="p">As the sole UX/UI Designer, I led the entire design process from research and problem definition to interface design, usability testing and developer handoff, working closely with the team and developers throughout.</p></section>
+<section id="challenges" class="rv"><h2 class="h2">Key challenges</h2><div class="cards3">
+<div class="ch glass"><span class="n">01</span><h3 class="h3">An end-to-end service experience</h3><p>Creating a seamless experience from placing a request to tracking deliveries and managing an account.</p></div>
+<div class="ch glass"><span class="n">02</span><h3 class="h3">Turning business requirements into user flows</h3><p>Turning business requirements into practical workflows and clear interfaces.</p></div>
+<div class="ch glass"><span class="n">03</span><h3 class="h3">Two different user roles</h3><p>Designing for both customers and administrators while keeping the platform consistent and easy to use.</p></div>
+</div></section>
+<section id="role" class="rv"><h2 class="h2">My responsibilities</h2><ul class="list"><li>Led the end-to-end design process from discovery to developer handoff</li><li>Ran research and defined product requirements from business needs</li><li>Created information architecture, user flows and site maps</li><li>Designed paper prototypes, wireframes and interactive prototypes</li><li>Designed responsive interfaces for customers and administrators</li><li>Built a reusable UI library for visual consistency</li><li>Designed the brand identity, logo and key visual assets</li><li>Ran usability testing and refined the designs from feedback</li><li>Collaborated closely with developers through implementation</li></ul></section>
+<section id="process" class="rv"><h2 class="h2">Design process</h2>
+<div class="stage"><h3 class="h3">Discover</h3>
+<p class="p" style="margin:0">Understanding the problem through research, assumptions and user insights.</p>
+<div style="display:flex;flex-direction:column;gap:12px"><button type="button" class="shot img fit" data-cap="UX storyboard"><img src="shots/t/ux-04-800.webp" srcset="shots/t/ux-04-800.webp 800w, shots/t/ux-04-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/ux-04.webp" data-w="2000" data-h="1125" alt="Storyboard of an office worker ordering goods from Japan, from browsing to delivery" width="1600" height="900" loading="lazy" decoding="async"></button><div class="grid2"><button type="button" class="shot img fit" data-cap="Problem &amp; hypothesis"><img src="shots/t/ux-05-800.webp" srcset="shots/t/ux-05-800.webp 800w, shots/t/ux-05-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-05.webp" data-w="2000" data-h="1125" alt="Three problem definitions with hypotheses for different user groups" width="1600" height="900" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="Primary research"><img src="shots/t/ux-07-800.webp" srcset="shots/t/ux-07-800.webp 800w, shots/t/ux-07-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-07.webp" data-w="2000" data-h="1125" alt="Research objective, interview targets and hypothesis-testing questions" width="1600" height="900" loading="lazy" decoding="async"></button></div><div class="grid2"><button type="button" class="shot img fit" data-cap="Documentary research"><img src="shots/t/ux-08-800.webp" srcset="shots/t/ux-08-800.webp 800w, shots/t/ux-08-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-08.webp" data-w="2000" data-h="1125" alt="Five research papers reviewed on cross-border buying behavior" width="1600" height="900" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="Primary synthesis"><img src="shots/t/ux-25-800.webp" srcset="shots/t/ux-25-800.webp 800w, shots/t/ux-25-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-25.webp" data-w="2000" data-h="1125" alt="Affinity diagram grouping findings into behavior, cost, storage, attitude and needs" width="1600" height="900" loading="lazy" decoding="async"></button></div></div></div>
+<div class="stage"><h3 class="h3">Define</h3>
+<p class="p" style="margin:0">Turning research findings into actionable product goals.</p>
+<div style="display:flex;flex-direction:column;gap:12px"><div class="grid2"><button type="button" class="shot img fit" data-cap="Problem statement"><img src="shots/t/ux-26-800.webp" srcset="shots/t/ux-26-800.webp 800w, shots/t/ux-26-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-26.webp" data-w="2000" data-h="1125" alt="Rewritten problem definitions and hypotheses after research" width="1600" height="900" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="Persona"><img src="shots/t/ux-28-800.webp" srcset="shots/t/ux-28-800.webp 800w, shots/t/ux-28-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-28.webp" data-w="2000" data-h="1125" alt="Persona: Chef, a 29-year-old investor in Bangkok, with goals and pain points" width="1600" height="900" loading="lazy" decoding="async"></button></div><div class="grid2"><button type="button" class="shot img fit" data-cap="Competitive research"><img src="shots/t/ux-29-800.webp" srcset="shots/t/ux-29-800.webp 800w, shots/t/ux-29-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-29.webp" data-w="2000" data-h="1125" alt="Pros and cons of five Japan-to-Thailand shipping competitors" width="1600" height="900" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="Competitive map"><img src="shots/t/ux-30-800.webp" srcset="shots/t/ux-30-800.webp 800w, shots/t/ux-30-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-30.webp" data-w="2000" data-h="1125" alt="Competitive map by price and range of services" width="1600" height="900" loading="lazy" decoding="async"></button></div><div class="grid2"><button type="button" class="shot img fit" data-cap="Task analysis"><img src="shots/t/ux-31-800.webp" srcset="shots/t/ux-31-800.webp 800w, shots/t/ux-31-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-31.webp" data-w="2000" data-h="1125" alt="Task analysis of competitor websites and their service flows" width="1600" height="900" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="How might we"><img src="shots/t/ux-32-800.webp" srcset="shots/t/ux-32-800.webp 800w, shots/t/ux-32-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-32.webp" data-w="2000" data-h="1125" alt="How-might-we notes: Thai website, easy to use, 24-hour contact, tracking and clear pricing" width="1600" height="900" loading="lazy" decoding="async"></button></div></div></div>
+<div class="stage"><h3 class="h3">Develop</h3>
+<p class="p" style="margin:0">Structuring the product experience before moving into visual design.</p>
+<div style="display:flex;flex-direction:column;gap:12px"><button type="button" class="shot img fit" data-cap="User flow · before"><img src="shots/t/ux-34-800.webp" srcset="shots/t/ux-34-800.webp 800w, shots/t/ux-34-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/ux-34.webp" data-w="2000" data-h="1125" alt="Previous user flow through Facebook and LINE" width="1600" height="900" loading="lazy" decoding="async"></button><div class="grid2"><button type="button" class="shot img fit" data-cap="User flow · drop-off"><img src="shots/t/ux-35-800.webp" srcset="shots/t/ux-35-800.webp 800w, shots/t/ux-35-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-35.webp" data-w="2000" data-h="1125" alt="User flow for the drop-off shipping service" width="1600" height="900" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="User flow · traveler"><img src="shots/t/ux-36-800.webp" srcset="shots/t/ux-36-800.webp 800w, shots/t/ux-36-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-36.webp" data-w="2000" data-h="1125" alt="User flow for travelers sending goods home" width="1600" height="900" loading="lazy" decoding="async"></button></div><button type="button" class="shot img fit" data-cap="Site map"><img src="shots/t/ux-37-800.webp" srcset="shots/t/ux-37-800.webp 800w, shots/t/ux-37-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/ux-37.webp" data-w="2000" data-h="1125" alt="Site map of the JP Carry website" width="1600" height="900" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="Story mapping"><img src="shots/t/ux-38-800.webp" srcset="shots/t/ux-38-800.webp 800w, shots/t/ux-38-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/ux-38.webp" data-w="2000" data-h="1125" alt="Story map prioritizing MVP features for the persona" width="1600" height="900" loading="lazy" decoding="async"></button></div></div>
+<div class="stage"><h3 class="h3">Deliver</h3>
+<p class="p" style="margin:0">Turning concepts into interfaces, validating the designs and preparing them for implementation, including a logo and visual identity for a consistent brand presence.</p>
+<div style="display:flex;flex-direction:column;gap:12px"><button type="button" class="shot img fit" data-cap="Brand identity"><img src="shots/t/brand-800.webp" srcset="shots/t/brand-800.webp 800w, shots/t/brand-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/brand.webp" data-w="1706" data-h="1578" alt="JP Carry UI library: colors, typography, buttons, logo, navigation and footer" width="1600" height="1480" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="Paper prototyping"><img src="shots/t/ux-40-800.webp" srcset="shots/t/ux-40-800.webp 800w, shots/t/ux-40-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/ux-40.webp" data-w="2000" data-h="1125" alt="Paper prototypes of six key pages" width="1600" height="900" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="Wireframes"><img src="shots/t/ux-41-800.webp" srcset="shots/t/ux-41-800.webp 800w, shots/t/ux-41-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/ux-41.webp" data-w="2000" data-h="1125" alt="Wireframe and annotation overview of all pages" width="1600" height="900" loading="lazy" decoding="async"></button><div class="grid2"><button type="button" class="shot img fit" data-cap="UI · Home"><img src="shots/t/ux-45-800.webp" srcset="shots/t/ux-45-800.webp 800w, shots/t/ux-45-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-45.webp" data-w="2000" data-h="1125" alt="Home page UI with navigation, banner and footer" width="1600" height="900" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="UI · Home content"><img src="shots/t/ux-46-800.webp" srcset="shots/t/ux-46-800.webp 800w, shots/t/ux-46-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-46.webp" data-w="2000" data-h="1125" alt="Home page content sections" width="1600" height="900" loading="lazy" decoding="async"></button></div><div class="grid2"><button type="button" class="shot img fit" data-cap="UI · Service"><img src="shots/t/ux-47-800.webp" srcset="shots/t/ux-47-800.webp 800w, shots/t/ux-47-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-47.webp" data-w="2000" data-h="1125" alt="Service page UI" width="1600" height="900" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="UI · Service detail"><img src="shots/t/ux-48-800.webp" srcset="shots/t/ux-48-800.webp 800w, shots/t/ux-48-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-48.webp" data-w="2000" data-h="1125" alt="Service detail with step-by-step guide" width="1600" height="900" loading="lazy" decoding="async"></button></div><div class="grid2"><button type="button" class="shot img fit" data-cap="UI · Using service"><img src="shots/t/ux-49-800.webp" srcset="shots/t/ux-49-800.webp 800w, shots/t/ux-49-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-49.webp" data-w="2000" data-h="1125" alt="Service form with the progress breadcrumb" width="1600" height="900" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="UI · Parcel status"><img src="shots/t/ux-50-800.webp" srcset="shots/t/ux-50-800.webp 800w, shots/t/ux-50-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-50.webp" data-w="2000" data-h="1125" alt="Check parcel status with tracking timeline" width="1600" height="900" loading="lazy" decoding="async"></button></div><div class="grid2"><button type="button" class="shot img fit" data-cap="UI · Contact"><img src="shots/t/ux-51-800.webp" srcset="shots/t/ux-51-800.webp 800w, shots/t/ux-51-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-51.webp" data-w="2000" data-h="1125" alt="Contact page with QR codes, form and map" width="1600" height="900" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="UI · Member"><img src="shots/t/ux-52-800.webp" srcset="shots/t/ux-52-800.webp 800w, shots/t/ux-52-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ux-52.webp" data-w="2000" data-h="1125" alt="Member profile and service history" width="1600" height="900" loading="lazy" decoding="async"></button></div><div class="grid3"><button type="button" class="shot img fit" data-cap="Usability fix · services"><img src="shots/t/ux-58-800.webp" srcset="shots/t/ux-58-800.webp 800w, shots/t/ux-58-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 290px" data-full="shots/ux-58.webp" data-w="2000" data-h="1125" alt="Usability finding: clearer service names" width="1600" height="900" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="Usability fix · contact"><img src="shots/t/ux-59-800.webp" srcset="shots/t/ux-59-800.webp 800w, shots/t/ux-59-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 290px" data-full="shots/ux-59.webp" data-w="2000" data-h="1125" alt="Usability finding: contact without logging in" width="1600" height="900" loading="lazy" decoding="async"></button><button type="button" class="shot img fit" data-cap="Usability fix · payment"><img src="shots/t/ux-60-800.webp" srcset="shots/t/ux-60-800.webp 800w, shots/t/ux-60-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 290px" data-full="shots/ux-60.webp" data-w="2000" data-h="1125" alt="Usability finding: back button on payment" width="1600" height="900" loading="lazy" decoding="async"></button></div></div></div>
+</section>
+<section id="solution" class="rv"><h2 class="h2">Final solution</h2>
+<p class="p">A customer portal that takes users from request to delivery, and an admin dashboard for managing daily operations.</p>
+<div style="display:flex;flex-direction:column;gap:34px">
+<div class="gsec"><p class="grp"><span>CUSTOMER PORTAL</span></p>
+<div class="screen"><div class="meta"><h3 class="h3">Home</h3></div><p class="p" style="margin:0">Introduces the platform&#x27;s services with quick access to parcel forwarding, proxy buying and shipment tracking.</p><div style="display:flex;flex-direction:column;gap:12px"><button type="button" class="shot img" data-cap="Home"><img src="shots/t/home-800.webp" srcset="shots/t/home-800.webp 800w, shots/t/home-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/home.webp" data-w="2880" data-h="14836" alt="JP Carry homepage with services, pricing, how-to guides and reviews" width="1600" height="1200" loading="lazy" decoding="async"></button></div></div>
+<div class="screen"><div class="meta"><h3 class="h3">Services</h3></div><p class="p" style="margin:0">Presents the main services, Proxy Buy and Drop Off, with a clear and straightforward flow.</p><div style="display:flex;flex-direction:column;gap:12px"><button type="button" class="shot img" data-cap="Services"><img src="shots/t/services-800.webp" srcset="shots/t/services-800.webp 800w, shots/t/services-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/services.webp" data-w="2880" data-h="3166" alt="Our Service page with proxy buy and drop-off options" width="1600" height="1200" loading="lazy" decoding="async"></button></div></div>
+<div class="screen"><div class="meta"><h3 class="h3">Summary</h3></div><p class="p" style="margin:0">Summarizes all purchase details before submission: products, pricing, shipping fees and order information in one place.</p><div style="display:flex;flex-direction:column;gap:12px"><button type="button" class="shot img" data-cap="Proxy buy"><img src="shots/t/proxy-buy-800.webp" srcset="shots/t/proxy-buy-800.webp 800w, shots/t/proxy-buy-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/proxy-buy.webp" data-w="2880" data-h="2940" alt="Proxy buy form with the order summary panel" width="1600" height="1200" loading="lazy" decoding="async"></button></div></div>
+<div class="screen"><div class="meta"><h3 class="h3">Payment</h3></div><p class="p" style="margin:0">Pay the first part by QR code, with a tracker that shows every step from placing the order to picking up the parcel.</p><div style="display:flex;flex-direction:column;gap:12px"><button type="button" class="shot img" data-cap="Payment"><img src="shots/t/payment-800.webp" srcset="shots/t/payment-800.webp 800w, shots/t/payment-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/payment.webp" data-w="2880" data-h="3070" alt="Payment step with QR code and the eight-step progress tracker" width="1600" height="1200" loading="lazy" decoding="async"></button></div></div>
+<div class="screen"><div class="meta"><h3 class="h3">Wallet</h3></div><p class="p" style="margin:0">JPCarry Pay wallet for top-ups, transfers and saved cards, with daily check-in coins that reward returning users.</p><div style="display:flex;flex-direction:column;gap:12px"><button type="button" class="shot img" data-cap="Wallet"><img src="shots/t/wallet-800.webp" srcset="shots/t/wallet-800.webp 800w, shots/t/wallet-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/wallet.webp" data-w="2880" data-h="2889" alt="JPCarry Pay wallet with daily check-in coins and top-up history" width="1600" height="1200" loading="lazy" decoding="async"></button></div></div>
+<div class="screen"><div class="meta"><h3 class="h3">Check parcel status</h3></div><p class="p" style="margin:0">Track parcel progress and view shipping updates in real time.</p><div style="display:flex;flex-direction:column;gap:12px"><button type="button" class="shot img" data-cap="Parcel status"><img src="shots/t/parcel-800.webp" srcset="shots/t/parcel-800.webp 800w, shots/t/parcel-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/parcel.webp" data-w="2880" data-h="3411" alt="Check parcel status with the delivery timeline" width="1600" height="1200" loading="lazy" decoding="async"></button></div></div>
+<div class="screen"><div class="meta"><h3 class="h3">Member</h3></div><p class="p" style="margin:0">Personal information, wallet, orders and account management in one place.</p><div style="display:flex;flex-direction:column;gap:12px"><button type="button" class="shot img" data-cap="Member profile"><img src="shots/t/member-800.webp" srcset="shots/t/member-800.webp 800w, shots/t/member-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/member.webp" data-w="2880" data-h="3459" alt="Member profile with wallet, shipping address and service history" width="1600" height="1200" loading="lazy" decoding="async"></button></div></div>
+</div>
+<div class="gsec"><p class="grp"><span>ADMIN DASHBOARD</span></p>
+<div class="screen"><div class="meta"><h3 class="h3">Overview</h3></div><p class="p" style="margin:0">An overview of daily operations, order status and key platform activities.</p><div style="display:flex;flex-direction:column;gap:12px"><button type="button" class="shot img" data-cap="Admin overview"><img src="shots/t/a-overview-800.webp" srcset="shots/t/a-overview-800.webp 800w, shots/t/a-overview-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/a-overview.webp" data-w="2880" data-h="4000" alt="Admin overview with order and top-up status counts and transaction lists" width="1600" height="1200" loading="lazy" decoding="async"></button></div></div>
+<div class="screen"><div class="meta"><h3 class="h3">Bulk update list</h3></div><p class="p" style="margin:0">Update multiple orders at once, improving efficiency and cutting repetitive tasks.</p><div style="display:flex;flex-direction:column;gap:12px"><div class="grid2"><button type="button" class="shot img" data-cap="Bulk update · drop-off"><img src="shots/t/a-bulk-drop-800.webp" srcset="shots/t/a-bulk-drop-800.webp 800w, shots/t/a-bulk-drop-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/a-bulk-drop.webp" data-w="2880" data-h="3080" alt="Bulk update list, drop-off tab, with an expanded order" width="1600" height="1200" loading="lazy" decoding="async"></button><button type="button" class="shot img" data-cap="Bulk update · proxy buy"><img src="shots/t/a-bulk-buy-800.webp" srcset="shots/t/a-bulk-buy-800.webp 800w, shots/t/a-bulk-buy-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/a-bulk-buy.webp" data-w="2880" data-h="3080" alt="Bulk update list, proxy-buy tab, with an expanded order" width="1600" height="1200" loading="lazy" decoding="async"></button></div></div></div>
+<div class="screen"><div class="meta"><h3 class="h3">Order detail modal</h3></div><p class="p" style="margin:0">Review and update each order in a modal without leaving the current page.</p><div style="display:flex;flex-direction:column;gap:12px"><button type="button" class="shot img fit" data-cap="Order detail states"><img src="shots/t/a-modal-800.webp" srcset="shots/t/a-modal-800.webp 800w, shots/t/a-modal-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/a-modal.webp" data-w="2088" data-h="1116" alt="Order detail modal in six states, from location check to weight and price updates" width="1600" height="855" loading="lazy" decoding="async"></button></div></div>
+</div>
+<div class="gsec"><p class="grp"><span>MOBILE</span></p>
+<div class="screen"><div class="meta"><h3 class="h3">Responsive screens</h3></div><p class="p" style="margin:0">The customer portal adapts to mobile with a bottom navigation bar, keeping services, payments, wallet and account easy to reach with one hand.</p><div style="display:flex;flex-direction:column;gap:12px"><div class="grid4 phones n10"><button type="button" class="shot img phone" data-cap="Home"><img src="shots/t/m-home-800.webp" srcset="shots/t/m-home-800.webp 800w, shots/t/m-home-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-home.webp" data-w="742" data-h="8000" alt="Mobile homepage with services, reasons to choose JP Carry, how-to guides and reviews" width="742" height="1408" loading="lazy" decoding="async"></button><button type="button" class="shot img phone" data-cap="Services"><img src="shots/t/m-services-800.webp" srcset="shots/t/m-services-800.webp 800w, shots/t/m-services-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-services.webp" data-w="1200" data-h="2277" alt="Mobile service selection" width="1200" height="2277" loading="lazy" decoding="async"></button><button type="button" class="shot img phone" data-cap="Proxy buy"><img src="shots/t/m-proxy-800.webp" srcset="shots/t/m-proxy-800.webp 800w, shots/t/m-proxy-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-proxy.webp" data-w="1200" data-h="2277" alt="Mobile proxy buy form with order summary" width="1200" height="2277" loading="lazy" decoding="async"></button><button type="button" class="shot img phone" data-cap="Drop off"><img src="shots/t/m-drop-800.webp" srcset="shots/t/m-drop-800.webp 800w, shots/t/m-drop-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-drop.webp" data-w="1200" data-h="2277" alt="Mobile drop-off form with saved destinations" width="1200" height="2277" loading="lazy" decoding="async"></button><button type="button" class="shot img phone" data-cap="Delivery address"><img src="shots/t/m-map-800.webp" srcset="shots/t/m-map-800.webp 800w, shots/t/m-map-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-map.webp" data-w="1200" data-h="2277" alt="Mobile delivery address picker on a map" width="1200" height="2277" loading="lazy" decoding="async"></button><button type="button" class="shot img phone" data-cap="Payment"><img src="shots/t/m-payment-800.webp" srcset="shots/t/m-payment-800.webp 800w, shots/t/m-payment-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-payment.webp" data-w="1200" data-h="2277" alt="Mobile payment with QR code and progress steps" width="1200" height="2277" loading="lazy" decoding="async"></button><button type="button" class="shot img phone" data-cap="Wallet"><img src="shots/t/m-wallet-800.webp" srcset="shots/t/m-wallet-800.webp 800w, shots/t/m-wallet-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-wallet.webp" data-w="1200" data-h="2277" alt="Mobile wallet with daily check-in coins" width="1200" height="2277" loading="lazy" decoding="async"></button><button type="button" class="shot img phone" data-cap="Parcel status"><img src="shots/t/m-status-800.webp" srcset="shots/t/m-status-800.webp 800w, shots/t/m-status-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-status.webp" data-w="1200" data-h="2277" alt="Mobile parcel status list with shipping progress" width="1200" height="2277" loading="lazy" decoding="async"></button><button type="button" class="shot img phone" data-cap="Parcel detail"><img src="shots/t/m-detail-800.webp" srcset="shots/t/m-detail-800.webp 800w, shots/t/m-detail-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-detail.webp" data-w="1200" data-h="2277" alt="Mobile parcel detail with status and order summary" width="1200" height="2277" loading="lazy" decoding="async"></button><button type="button" class="shot img phone" data-cap="Member"><img src="shots/t/m-member-800.webp" srcset="shots/t/m-member-800.webp 800w, shots/t/m-member-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-member.webp" data-w="1200" data-h="2277" alt="Mobile member profile" width="1200" height="2277" loading="lazy" decoding="async"></button></div></div></div>
+</div>
+</div></section>
+<section id="collab" class="rv"><h2 class="h2">Collaboration</h2><p class="p">As the sole UX/UI Designer, I worked with the team to define requirements and collaborated closely with developers throughout the project, from early concepts to implementation.</p></section>
+<section id="reflection" class="rv"><h2 class="h2">Reflection</h2><p class="lead-r">Owning the whole design process taught me to turn research into practical design decisions.</p><p class="p">Being the sole UX/UI Designer let me take ownership of everything from research and problem definition to usability testing and developer handoff, while balancing business goals, user needs and technical constraints.</p></section>
+<nav class="pn rv" aria-label="More projects"><a class="next prev glass" href="../homes-in-th/"><span class="go" aria-hidden="true">←</span><span><small>PREVIOUS PROJECT</small><b>Homes in TH</b></span></a><a class="next glass" href="../24xscore/"><span><small>NEXT PROJECT</small><b>24xScore</b></span><span class="go" aria-hidden="true">→</span></a></nav>
+<section id="contact" class="rv" aria-label="Contact">
+<div class="pc compact" aria-labelledby="pc-h">
+<div class="pc-msg">
+<p class="pc-hi">Let's talk,</p>
+<h2 class="pc-h" id="pc-h">Always open to something new.</h2>
+<p class="pc-sig">— Taweeporn</p>
+<p class="pc-loc">Bangkok, Thailand · GMT+7</p>
+</div>
+<div class="pc-addr">
+<span class="stamp" aria-hidden="true"><b>BKK</b>THAILAND</span>
+<div class="ln"><span class="ic sm"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7.5l8 5.5 8-5.5"/></svg></span><span class="lt"><small>EMAIL</small><span class="addr" >taweeporn.treewi@gmail.com</span></span><button class="copyic" id="copymail" type="button" aria-label="Copy email address" title="Copy email"><svg class="cp" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/><path d="M15.5 8.5V6a2.5 2.5 0 0 0-2.5-2.5H6A2.5 2.5 0 0 0 3.5 6v7A2.5 2.5 0 0 0 6 15.5h2.5"/></svg><svg class="ck" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><span class="tip" role="status" aria-live="polite"></span></div>
+<a class="ln" href="tel:0650988909"><span class="ic sm"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span><span class="lt"><small>PHONE</small>065 098 8909</span><span class="go" aria-hidden="true">↗</span></a>
+<a class="ln" href="https://www.linkedin.com/in/taweeporn-treewichayapong-579169401" target="_blank" rel="noopener"><span class="ic li sm"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i><svg class="fb" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2"/><path d="M6.5 16a3 3 0 0 1 5 0M14 10h4M14 14h3"/></svg></span><span class="lt"><small>LINKEDIN</small>Taweeporn Treewichayapong</span><span class="go" aria-hidden="true">↗</span></a>
+</div>
+</div>
+</section>
+<footer><span>© 2026 Taweeporn Treewichayapong</span><a href="#top">Back to top ↑</a></footer>
+</div>
+</div>
+</main>
+</div>
+
+<dialog class="lb" id="lb" aria-labelledby="lbt">
+<div class="lb-in">
+<div class="lb-art" id="lbart"></div>
+<div class="lb-cap"><div><b id="lbt"></b><br><small id="lbm" style="color:var(--muted)"></small></div><button type="button" class="dark" id="lbx">Close</button></div>
+</div>
+</dialog>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* scroll progress */
+  var bar = document.getElementById('progress');
+  function prog() { var h = document.documentElement.scrollHeight - innerHeight; bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(1, scrollY / h) : 0) + ')'; }
+  addEventListener('scroll', prog, { passive: true }); addEventListener('resize', prog); prog();
+  /* contents highlight */
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var map = {}; links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { links.forEach(function (a) { a.classList.remove('on'); }); var a = map[e.target.id]; if (a) a.classList.add('on'); } });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    Object.keys(map).forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+  }
+  /* lightbox */
+  var lb = document.getElementById('lb'), art = document.getElementById('lbart');
+  document.querySelectorAll('.shot').forEach(function (s) {
+    s.addEventListener('click', function () {
+      art.innerHTML = ''; var im = s.querySelector('img');
+      if (im) { var fw = +im.dataset.w || im.naturalWidth, fh = +im.dataset.h || im.naturalHeight; var w = document.createElement('div'); var ph = s.classList.contains('phone'); w.className = 'lb-scroll' + (ph ? ' phonefit' + (fw && fh / fw > 3.2 ? ' tall' : '') : (fw && fw < fh / 1.6 ? ' narrow' : '')); var big = new Image(); big.alt = im.alt; if (im.dataset.full) { if (fw && fh) { big.width = fw; big.height = fh; } big.src = im.dataset.full; } else { big.src = im.currentSrc || im.src; } w.appendChild(big); art.appendChild(w); }
+      else { var c = s.cloneNode(true); c.classList.remove('tall', 'wide'); c.removeAttribute('data-cap'); c.setAttribute('tabindex', '-1'); art.appendChild(c); }
+      document.getElementById('lbt').textContent = s.getAttribute('data-cap');
+      document.getElementById('lbm').textContent = im ? '' : 'Placeholder for ' + s.getAttribute('data-file');
+      if (lb.showModal) lb.showModal(); else lb.setAttribute('open', '');
+    });
+  });
+  function closeLb() { if (lb.close) lb.close(); else lb.removeAttribute('open'); }
+  document.getElementById('lbx').addEventListener('click', closeLb);
+  lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+  /* copy email */
+})();
+</script>
+<script>
+(function () {
+  var btn = document.getElementById('menuBtn'), nav = document.getElementById('mnav');
+  if (!btn || !nav) return;
+  function setOpen(o) { btn.setAttribute('aria-expanded', o ? 'true' : 'false'); btn.setAttribute('aria-label', o ? 'Close menu' : 'Open menu'); if (o) nav.removeAttribute('hidden'); else nav.setAttribute('hidden', ''); }
+  btn.addEventListener('click', function (e) { e.stopPropagation(); setOpen(nav.hasAttribute('hidden')); });
+  nav.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
+  document.addEventListener('click', function (e) { if (!nav.hasAttribute('hidden') && !nav.contains(e.target) && e.target !== btn) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !nav.hasAttribute('hidden')) { setOpen(false); btn.focus(); } });
+  window.addEventListener('resize', function () { if (window.innerWidth > 620) setOpen(false); });
+})();
+</script>
+<script>
+/* copy email: Clipboard API, falls back to execCommand, then to selecting the text */
+(function () {
+  var EMAIL = 'taweeporn.treewi@gmail.com';
+  function legacy(t) { var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none'; document.body.appendChild(ta); ta.select(); try { ta.setSelectionRange(0, t.length); } catch (e) {} var ok = false; try { ok = document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); return ok; }
+  function copy(t) { return new Promise(function (res, rej) { if (legacy(t)) return res(); var done = false; function ok() { if (!done) { done = true; res(); } } function no() { if (!done) { done = true; rej(); } } try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(ok, no); setTimeout(no, 1200); } else no(); } catch (e) { no(); } }); }
+  document.querySelectorAll('.copyic').forEach(function (btn) {
+    var tip = btn.parentNode.querySelector('.tip'), t0;
+    function show(msg, ok) { clearTimeout(t0); if (tip) tip.textContent = msg; btn.classList.toggle('ok', ok); btn.classList.add('tipon'); btn.setAttribute('aria-label', ok ? 'Email copied' : 'Copy email address'); t0 = setTimeout(function () { btn.classList.remove('ok', 'tipon'); btn.setAttribute('aria-label', 'Copy email address'); }, 1800); }
+    btn.addEventListener('click', function () {
+      copy(EMAIL).then(function () { show('Copied!', true); }, function () {
+        var a = btn.parentNode.querySelector('.addr'); if (a) { var r = document.createRange(); r.selectNodeContents(a); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+        show('Press \u2318C or Ctrl+C', false);
+      });
+    });
+  });
+})();
+</script>
+<script>
+/* keep the email on one line: if it is wider than its space (small phones), scale its font down just enough to fit */
+(function () {
+  var els = document.querySelectorAll('.ln .addr');
+  function fit() { els.forEach(function (a) { a.style.fontSize = ''; var cw = a.clientWidth, sw = a.scrollWidth; if (cw > 0 && sw > cw) { var fs = parseFloat(getComputedStyle(a).fontSize); a.style.fontSize = Math.max(11, Math.floor(fs * cw / sw * 10) / 10 - 0.2) + 'px'; } }); }
+  fit(); window.addEventListener('resize', fit); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit); window.addEventListener('load', fit);
+})();
+</script>
+<script>(function(){var gs=[].slice.call(document.querySelectorAll('.grp'));if(!gs.length)return;var t=0;function f(){t=0;gs.forEach(function(g){var top=parseFloat(getComputedStyle(g).top)||0;var r=g.getBoundingClientRect();g.classList.toggle('stuck',r.top<=top+1&&g.parentNode.getBoundingClientRect().bottom>r.bottom+8);});}addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(f);},{passive:true});addEventListener('resize',f);f();})();</script>
+
+</html>

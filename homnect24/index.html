@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Homnect24 Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Red+Hat+Display:wght@500;700;800;900&family=Varela+Round&display=swap">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/brands.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/fontawesome.min.js"></script>
+<style>
+/* Layout: same frosted system as the homepage. Sticky contents rail on the left, long-form case study on the right. No pure white. */
+:root {
+  --bg: #F2F3F7; --surface: #F8F8FB;
+  --glass: rgba(248, 248, 251, .62); --glass-strong: rgba(248, 248, 251, .86); --edge: rgba(255, 255, 255, .78);
+  --line: rgba(30, 34, 51, .09); --ink: #1E2233; --muted: #555B6F;
+  --accent: #166C99; --accent-ink: #0F5478; --accent-soft: #D9EEF7; --good: #22704F;
+  --sky: #C9E5F6; --mint: #C9F0E2; --leaf: #D3F0DA;
+  --sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --round: 'Red Hat Display', 'Manrope', system-ui, sans-serif; --chat: 'Varela Round', 'Manrope', system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 40; background: var(--bg); }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 12px; }
+.sky { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.sky i { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .8; animation: drift 26s ease-in-out infinite alternate; }
+@keyframes drift { to { transform: translate(60px, 40px) scale(1.12); } }
+.page { position: static; }
+.wrap { max-width: 1160px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.glass { background: var(--glass); -webkit-backdrop-filter: blur(18px) saturate(1.35); backdrop-filter: blur(18px) saturate(1.35); border: 1px solid var(--edge); box-shadow: 0 10px 40px rgba(30, 34, 51, .06); }
+.progress { position: fixed; left: 0; top: env(safe-area-inset-top, 0px); height: 4px; width: 100%; z-index: 35; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); }
+
+/* nav */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; padding-block: 14px; }
+.navpill.glass, .mnav.glass { position: relative; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border: 1px solid rgba(255, 255, 255, .55); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 -1px 0 rgba(255, 255, 255, .25), 0 6px 24px rgba(30, 34, 51, .06); }
+.navpill.glass::before, .mnav.glass::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: linear-gradient(180deg, rgba(248, 248, 251, .28), rgba(248, 248, 251, .5)); -webkit-backdrop-filter: blur(44px) saturate(1.8); backdrop-filter: blur(44px) saturate(1.8); pointer-events: none; }
+.navpill { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 8px 8px 22px; border-radius: 999px; }
+.back { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: 15px; text-decoration: none; }
+.back span { display: inline-flex; width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft); align-items: center; justify-content: center; transition: transform .3s cubic-bezier(.3, 1.8, .5, 1); }
+.back:hover span { transform: translateX(-4px); }
+.brand { font-weight: 800; font-size: 16px; text-decoration: none; letter-spacing: -0.01em; }
+.links { display: flex; align-items: center; gap: 22px; font-size: 14px; font-weight: 600; }
+.links a { text-decoration: none; color: var(--muted); transition: color .2s; }
+.links a:hover { color: var(--ink); }
+.links a.cur { color: var(--accent-ink); font-weight: 800; background: var(--accent-soft); padding: 8px 14px; border-radius: 999px; margin-right: -8px; }
+.links a.cur span { display: inline-block; transition: transform .3s cubic-bezier(.3, 1.8, .5, 1); }
+.links a.cur:hover span { transform: translateX(-3px); }
+@media (max-width: 620px) { .links { gap: 12px; } .links .hide-sm { display: none; } }
+.menu-btn { display: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); align-items: center; justify-content: center; cursor: pointer; padding: 0; transition: transform .3s cubic-bezier(.3, 1.8, .5, 1); }
+.menu-btn:active { transform: scale(.92); }
+.menu-btn i { position: relative; width: 18px; height: 2px; border-radius: 2px; background: currentColor; transition: background .2s; }
+.menu-btn i::before, .menu-btn i::after { content: ""; position: absolute; left: 0; width: 18px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .35s cubic-bezier(.3, 1.6, .5, 1); }
+.menu-btn i::before { transform: translateY(-6px); }
+.menu-btn i::after { transform: translateY(6px); }
+.menu-btn[aria-expanded="true"] i { background: transparent; }
+.menu-btn[aria-expanded="true"] i::before { transform: rotate(45deg); }
+.menu-btn[aria-expanded="true"] i::after { transform: rotate(-45deg); }
+.mnav { margin-top: 8px; border-radius: 28px; padding: 8px; display: flex; flex-direction: column; gap: 2px; background: var(--glass-strong); }
+.mnav[hidden] { display: none; }
+.mnav:not([hidden]) { animation: mpop .4s cubic-bezier(.3, 1.6, .5, 1) both; transform-origin: 90% 0; }
+@keyframes mpop { from { opacity: 0; transform: translateY(-8px) scale(.96); } to { opacity: 1; transform: none; } }
+.mnav a { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-radius: 20px; text-decoration: none; font-weight: 800; font-size: 18px; color: var(--ink); }
+.mnav a:hover, .mnav a:focus-visible { background: var(--accent-soft); }
+.mnav a[aria-current] { color: var(--accent-ink); background: var(--accent-soft); }
+.mnav a span { color: var(--muted); font-weight: 700; }
+@media (max-width: 620px) { .links .hide-sm, .links .cur { display: none; } .menu-btn { display: inline-flex; } }
+@media (min-width: 621px) { .mnav { display: none !important; } }
+@media (prefers-reduced-motion: reduce) { .mnav:not([hidden]) { animation: none; } .menu-btn i::before, .menu-btn i::after { transition: none; } }
+.dark { display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: var(--surface) !important; border-radius: 999px; padding: 11px 18px; font-weight: 700; font-size: 14px; text-decoration: none; border: 0; cursor: pointer; transition: transform .25s cubic-bezier(.3, 1.7, .5, 1); }
+.dark:hover { transform: translateY(-2px) scale(1.03); }
+
+/* hero */
+.hero { padding-block: clamp(28px, 5vw, 64px) clamp(32px, 5vw, 56px); }
+.kick { font-size: 13px; font-weight: 800; letter-spacing: .12em; color: var(--muted); margin: 0 0 14px; }
+.title { font-family: var(--round); font-weight: 800; font-size: clamp(52px, 10vw, 128px); line-height: .92; letter-spacing: -0.035em; margin: 0; }
+.title span { color: var(--accent); }
+.intro { font-size: clamp(18px, 2vw, 22px); color: var(--muted); max-width: none; margin: 22px 0 0; text-wrap: pretty; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 10px; margin-top: 28px; }
+.fact { border-radius: 22px; padding: 14px 16px; }
+.fact small { display: block; font-size: 12px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
+.fact b { font-size: 15px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.chips span { font-size: 13px; font-weight: 700; padding: 7px 13px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
+
+/* image placeholders */
+.shot { position: relative; display: block; width: 100%; border: 1px solid var(--edge); border-radius: 24px; overflow: hidden; background: linear-gradient(160deg, var(--sky), var(--surface) 60%, var(--leaf)); aspect-ratio: 16 / 10; cursor: zoom-in; padding: 0; text-align: left; transition: transform .4s cubic-bezier(.3, 1.6, .5, 1); }
+.shot:hover { transform: translateY(-4px); }
+.shot::before { content: ""; position: absolute; inset: 8% 6% -2%; border-radius: 16px 16px 0 0; background: rgba(248, 248, 251, .88); box-shadow: 0 12px 30px rgba(30, 34, 51, .08); }
+.shot::after { content: ""; position: absolute; left: calc(6% + 16px); top: calc(8% + 16px); width: 40%; height: 10px; border-radius: 99px; background: rgba(30, 34, 51, .1); box-shadow: 0 26px 0 -1px rgba(30, 34, 51, .06), 0 52px 0 -1px rgba(30, 34, 51, .06); }
+.shot .lab { position: absolute; left: 50%; top: 56%; transform: translate(-50%, -50%); z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; width: 80%; }
+.shot .lab b { font-size: clamp(14px, 1.6vw, 17px); }
+.shot .lab small { font-size: 12px; font-weight: 700; color: var(--muted); padding: 4px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink); overflow-wrap: anywhere; }
+.shot.tall { aspect-ratio: 4 / 3; }
+.shot.wide { aspect-ratio: 21 / 9; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+.grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; }
+
+/* layout with contents rail */
+.layout { display: flex; flex-wrap: wrap; gap: clamp(20px, 4vw, 48px); align-items: flex-start; padding-bottom: 60px; }
+.toc { flex: 1 1 210px; max-width: 240px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 96px); border-radius: 26px; padding: 18px; }
+.toc p { margin: 0 0 8px; font-size: 12px; font-weight: 800; letter-spacing: .1em; color: var(--muted); }
+.toc a { display: block; padding: 7px 12px; border-radius: 12px; font-size: 14px; font-weight: 700; text-decoration: none; color: var(--muted); transition: background .2s, color .2s, transform .25s cubic-bezier(.3, 1.8, .5, 1); }
+.toc a:hover { color: var(--ink); transform: translateX(3px); }
+.toc a.on { background: var(--accent-soft); color: var(--accent-ink); }
+.content { --sec: clamp(44px, 6vw, 64px); flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: var(--sec); }
+@media (max-width: 860px) { .toc { display: none; } }
+section { scroll-margin-top: 100px; }
+.h2 { font-family: var(--round); font-weight: 700; font-size: clamp(28px, 4vw, 44px); line-height: 1.05; letter-spacing: -0.035em; margin: 0 0 18px; text-wrap: balance; }
+.h3 { font-size: 20px; margin: 0 0 6px; }
+.p { margin: 0 0 14px; font-size: 17px; color: var(--muted); max-width: none; }
+.cards3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 12px; }
+.ch { border-radius: 26px; padding: 22px; display: flex; flex-direction: column; gap: 8px; transition: transform .35s cubic-bezier(.3, 1.7, .5, 1); }
+.ch:hover { transform: translateY(-5px) rotate(-.6deg); }
+.ch .n { font-family: var(--round); font-weight: 800; font-size: 34px; line-height: 1; color: var(--accent); }
+.ch p { margin: 0; font-size: 15px; color: var(--muted); }
+.list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 10px; }
+.list li { display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 20px; background: var(--glass-strong); border: 1px solid var(--line); font-weight: 600; font-size: 15px; }
+.list li::before { content: "✓"; flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--mint); color: var(--good); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; }
+.screen { display: flex; flex-direction: column; gap: 12px; padding-top: 26px; border-top: 1px solid var(--line); }
+.grp::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.gsec { display: flex; flex-direction: column; gap: 34px; }
+.grp { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 98px); z-index: 20; display: flex; align-items: center; gap: 12px; margin: 0; pointer-events: none; }
+.grp span { display: inline-flex; align-items: center; min-height: 34px; padding: 0 14px; border-radius: 999px; font-size: 12.5px; font-weight: 800; letter-spacing: .12em; color: var(--accent-ink); background: var(--accent-soft); border: 1px solid transparent; transition: box-shadow .25s, background-color .25s, border-color .25s; pointer-events: auto; }
+.grp::after { transition: opacity .2s; }
+.grp.stuck::after { opacity: 0; }
+.grp.stuck span { background: rgba(248, 248, 251, .95); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); border-color: var(--line); box-shadow: 0 10px 26px rgba(30, 34, 51, .12); }
+.grp + .screen { border-top: 0; padding-top: 0; }
+.screen:first-of-type { border-top: 0; padding-top: 0; }
+.screen .meta { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; }
+.screen .meta p { margin: 0; color: var(--muted); font-size: 15px; max-width: none; }
+.tag { font-size: 12px; font-weight: 800; letter-spacing: .06em; color: var(--accent-ink); background: var(--accent-soft); border-radius: 999px; padding: 4px 10px; }
+.quote { border-radius: 26px; padding: clamp(18px, 3vw, 28px); border-left: 4px solid var(--accent); }
+.quote p { margin: 0; font-weight: 700; font-size: clamp(17px, 1.7vw, 19px); line-height: 1.55; color: var(--ink); max-width: none; text-wrap: pretty; }
+.next { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; border-radius: 32px; padding: clamp(22px, 4vw, 36px); text-decoration: none; transition: transform .4s cubic-bezier(.3, 1.6, .5, 1); }
+.next:hover { transform: translateY(-5px); }
+.next small { display: block; font-size: 12px; font-weight: 800; letter-spacing: .1em; color: var(--muted); }
+.next b { font-family: var(--round); font-weight: 800; font-size: clamp(28px, 4vw, 44px); letter-spacing: -0.035em; }
+.next .go { width: 60px; height: 60px; border-radius: 50%; background: var(--accent); color: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 22px; transition: transform .35s cubic-bezier(.3, 1.8, .5, 1); }
+.next:hover .go { transform: translateX(6px) rotate(-10deg); }
+.pn { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 12px; }
+.pn .next { flex-wrap: nowrap; gap: 14px; padding: 14px 18px; border-radius: 22px; }
+.pn .next:hover { transform: translateY(-3px); }
+.pn .next small { font-size: 11px; }
+.pn .next b { font-family: var(--sans); font-weight: 800; font-size: 18px; letter-spacing: -0.01em; }
+.pn .next .go { flex: none; width: 38px; height: 38px; font-size: 16px; }
+.pn .next:hover .go { transform: translateX(4px); }
+.pn .next.prev:hover .go { transform: translateX(-4px); }
+.next.prev { justify-content: flex-start; }
+.next.prev:hover .go { transform: translateX(-6px) rotate(10deg); }
+.cta { border-radius: 36px; padding: clamp(24px, 5vw, 48px); display: flex; flex-direction: column; gap: 22px; position: relative; overflow: hidden; scroll-margin-top: 100px; }
+.cta::before { content: ""; position: absolute; width: 320px; height: 320px; right: -90px; top: -120px; border-radius: 50%; background: radial-gradient(circle, var(--mint), transparent 70%); pointer-events: none; }
+.cta .who { display: flex; align-items: center; gap: 12px; position: relative; }
+.cta .av { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(140deg, var(--accent), #2E9A6A); color: var(--surface); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex: none; }
+.cta .who b { font-size: 15px; }
+.cta .who small { display: block; font-size: 13px; color: var(--muted); }
+.cta .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2E9A6A; margin-right: 6px; box-shadow: 0 0 0 4px rgba(46, 154, 106, .18); animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 7px rgba(46, 154, 106, 0); } }
+.cta-h { position: relative; margin: 0; font-family: var(--round); font-weight: 800; font-size: clamp(30px, 5vw, 52px); line-height: 1; letter-spacing: -0.035em; text-wrap: balance; }
+.cta-h span { color: var(--accent); }
+.cta-row { position: relative; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.cta .mail { display: inline-flex; align-items: center; gap: 10px; padding: 6px 6px 6px 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-weight: 700; font-size: 15px; max-width: 100%; }
+.cta .mail > span:not(.mic) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+@media (max-width: 420px) { .cta .mail .mic { display: none; } .cta { padding: 22px 16px; } .cta .mail { font-size: 14px; padding-left: 14px; gap: 6px; } .cta .copy { padding: 8px 11px; } }
+.cta .copy { border: 0; background: var(--accent-soft); color: var(--accent-ink); font-weight: 800; font-size: 13px; padding: 8px 14px; border-radius: 999px; cursor: pointer; flex: none; }
+@media (prefers-reduced-motion: reduce) { .cta .dot { animation: none; } }
+.mic { display: inline-flex; color: var(--accent-ink); flex: none; }
+.chipset { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+.chipset span { display: inline-flex; align-items: center; gap: 8px; padding: 8px 15px 8px 8px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 14px; font-weight: 800; }
+.chipset span i { font-style: normal; font-size: 11px; font-weight: 800; letter-spacing: .06em; color: var(--accent-ink); background: var(--accent-soft); padding: 4px 9px; border-radius: 999px; }
+.contrib { margin-top: 18px; }
+.contrib .cl { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
+.contrib div { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.contrib div span { font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); border-color: color-mix(in srgb, var(--accent) 35%, transparent); color: var(--accent-ink); }
+.ic.li.sm { font-size: 16px; }
+.ic { flex: none; width: 42px; height: 42px; border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; background: var(--accent-soft); color: var(--accent-ink); transition: transform .35s cubic-bezier(.3, 1.8, .5, 1), background .2s, color .2s; }
+a:hover > .ic { transform: rotate(-8deg) scale(1.08); background: var(--accent); color: var(--surface); }
+.ic.li { background: #0A66C2; color: #F8F8FB; font-size: 19px; }
+a:hover > .ic.li { background: #004182; color: #F8F8FB; }
+.ic.li svg.svg-inline--fa { width: 1em; height: 1em; }
+.ic.li .svg-inline--fa ~ .fb { display: none; }
+.mic { display: inline-flex; color: var(--accent-ink); flex: none; }
+.copyin { flex: none; border: 0; background: var(--accent-soft); color: var(--accent-ink); font: inherit; font-weight: 800; font-size: 14px; padding: 10px 16px; border-radius: 999px; cursor: pointer; transition: transform .25s cubic-bezier(.3, 1.7, .5, 1), background .2s; }
+.copyin:hover { transform: scale(1.05); background: #C7E5F3; }
+.pc { display: flex; flex-wrap: wrap; border-radius: 36px; background: var(--glass); -webkit-backdrop-filter: blur(18px) saturate(1.35); backdrop-filter: blur(18px) saturate(1.35); border: 1px solid var(--edge); box-shadow: 0 10px 40px rgba(30, 34, 51, .06); overflow: hidden; }
+.pc-msg { flex: 1 1 440px; padding: clamp(24px, 4.4vw, 52px); border-right: 1px dashed var(--line); }
+.pc-msg p { margin: 0; }
+.pc-hi { font-family: var(--chat); font-size: 20px; color: var(--accent-ink); }
+.pc-h { font-family: var(--round); font-weight: 700; font-size: clamp(32px, 5vw, 56px); line-height: 1.02; letter-spacing: -0.035em; margin: 10px 0 16px; text-wrap: balance; }
+.pc-p { color: var(--muted); font-size: 17px; max-width: none; }
+.pc-sig { font-family: var(--chat); font-size: 20px; color: var(--accent-ink); margin-top: 22px !important; }
+.pc-addr { flex: 1 1 400px; padding: clamp(24px, 4.4vw, 48px); display: flex; flex-direction: column; }
+.stamp { align-self: flex-end; width: 78px; height: 92px; border: 1.5px dashed rgba(22, 108, 153, .45); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--accent-ink); font-weight: 800; font-size: 11px; letter-spacing: .06em; margin-bottom: 14px; background: var(--accent-soft); transform: rotate(3deg); }
+.stamp b { font-family: var(--round); font-size: 22px; letter-spacing: -0.02em; }
+.ln { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--line); font-weight: 700; font-size: 16px; color: inherit; text-decoration: none; }
+.ln .lt { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.ln small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
+.ln .addr { display: block; font-family: var(--sans); font-weight: 700; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: clip; }
+.pc-addr, .pc-msg { min-width: 0; }
+.copyic { flex: none; width: 36px; height: 36px; margin-right: -9px; border: 0; border-radius: 12px; background: transparent; color: var(--muted); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; transition: background .2s, color .2s, transform .3s cubic-bezier(.3, 1.8, .5, 1); }
+.copyic:active svg { transform: scale(.88); }
+.copyic .ck { display: none; }
+.copyic.ok { color: var(--good); }
+.copyic.ok .cp { display: none; }
+.copyic.ok .ck { display: block; }
+@media (max-width: 400px) { .ln { gap: 10px; } .pc-addr { padding-left: 16px; padding-right: 16px; } .ln .ic.sm { width: 30px; height: 30px; border-radius: 10px; } .ln .ic.sm svg { width: 16px; height: 16px; } }
+
+.ln .go { color: var(--muted); font-weight: 800; transition: transform .3s cubic-bezier(.3, 1.8, .5, 1), color .2s; }
+a.ln:hover .go { transform: translateX(4px); color: var(--accent); }
+a.ln:hover .lt { color: var(--accent-ink); }
+.ic.sm { width: 34px; height: 34px; border-radius: 11px; }
+.ic.sm svg { width: 18px; height: 18px; }
+.ic.li.sm { font-size: 16px; }
+.pc-addr .status { margin: 0; }
+.pc.compact .pc-msg { display: flex; flex-direction: column; justify-content: center; }
+.pc.compact .pc-h { margin-bottom: 0; }
+.pc.compact .pc-addr { justify-content: center; padding-block: clamp(18px, 3vw, 32px); }
+.pc.compact .pc-msg { padding-block: clamp(22px, 3.4vw, 40px); }
+.pc.compact .stamp { display: none; }
+.pc.compact .pc-h { font-size: clamp(30px, 4vw, 46px); }
+.pc.compact .ln:last-child { border-bottom: 0; }
+.pc { container: pc / inline-size; }
+@container pc (max-width: 839.98px) { .pc-msg { border-right: 0; border-bottom: 1px dashed var(--line); } .stamp { position: absolute; right: 18px; top: -62px; width: 70px; height: 84px; } .pc-addr { position: relative; padding-top: 18px; } .pc-msg { padding-right: 100px; } }
+@media (max-width: 420px) { .pc-msg { padding-right: 24px; } .stamp { display: none; } }
+/* contact postcard keeps the site theme */
+.pc { --accent: #166C99; --accent-ink: #0F5478; --accent-soft: #D9EEF7; }
+.note { font-size: 13px; color: var(--muted); border-radius: 18px; padding: 12px 16px; border: 1px dashed rgba(22, 108, 153, .35); background: rgba(217, 238, 247, .4); }
+footer { padding-block: 24px 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); }
+/* reveal */
+.rv { animation: rise .8s cubic-bezier(.3, 1.4, .5, 1) both; animation-timeline: view(); animation-range: entry 0% entry 45%; }
+@keyframes rise { from { opacity: .001; transform: translateY(26px) scale(.98); } to { opacity: 1; transform: none; } }
+@supports not (animation-timeline: view()) { .rv { animation: none; } }
+/* lightbox */
+.lb { border: 0; padding: 0; background: transparent; max-width: min(1080px, 94vw); width: 100%; }
+.lb::backdrop { background: rgba(30, 34, 51, .45); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.lb-in { background: var(--surface); border-radius: 30px; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+.lb[open] .lb-in { animation: pop .5s cubic-bezier(.3, 1.6, .5, 1) both; }
+@keyframes pop { 0% { opacity: 0; transform: scale(.85) translateY(20px); } 60% { opacity: 1; transform: scale(1.02); } 100% { transform: none; } }
+.lb-art .shot { cursor: default; aspect-ratio: 16 / 10; }
+.lb-art .shot:hover { transform: none; }
+.lb-cap { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 0 8px 4px; }
+@media (prefers-reduced-motion: reduce) { .sky i, .rv, .lb[open] .lb-in { animation: none !important; } .shot, .ch, .next, .toc a, .back span, .dark { transition: none; } }
+
+
+/* email row: whole row copies, hover matches the phone and LinkedIn rows */
+.ln:has(.copyic) { position: relative; cursor: pointer; }
+.copyic::after { content: ""; position: absolute; inset: 0; }
+.copyic:focus-visible { outline: none; }
+.ln:has(.copyic:focus-visible) { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 12px; }
+.ln:has(.copyic:hover) > .ic, .ln:has(.copyic:focus-visible) > .ic { transform: rotate(-8deg) scale(1.08); background: var(--accent); color: var(--surface); }
+.ln:has(.copyic:hover) .lt { color: var(--accent-ink); }
+.copyic svg { transition: transform .3s cubic-bezier(.3, 1.8, .5, 1); }
+.ln:has(.copyic:hover) .copyic:not(.ok) { color: var(--accent); }
+.ln:has(.copyic:hover) .copyic:not(.ok) svg { transform: translateX(4px); }
+.ln .tip { position: absolute; right: -8px; bottom: calc(100% - 10px); z-index: 3; background: var(--ink); color: var(--surface); font-size: 12px; font-weight: 800; letter-spacing: .01em; padding: 5px 11px; border-radius: 999px; white-space: nowrap; pointer-events: none; opacity: 0; transform: translateY(6px) scale(.9); transform-origin: 80% 100%; transition: opacity .18s, transform .3s cubic-bezier(.3, 1.8, .5, 1); }
+.ln:has(.copyic.tipon) .tip { opacity: 1; transform: none; }
+/* phones: keep Let's talk and the menu button close together */
+@media (max-width: 620px) { .links { gap: 8px; } }
+.pc-loc { margin: 6px 0 0 !important; font-size: 13.5px; font-weight: 600; line-height: 1.4; color: var(--muted); padding-left: 2px; }
+.pc.compact .pc-sig { margin-top: 16px !important; }
+/* Reflection as plain text, the first sentence a little larger and darker */
+.lead-r { margin: 0 0 12px; font-size: 19px; line-height: 1.55; font-weight: 600; color: var(--ink); max-width: none; }
+/* the closing trio (Reflection, Previous/Next, contact) sits tighter than the main sections */
+.content > .pn { margin-top: 0; }
+.content > .pn + #contact { margin-top: calc(clamp(24px, 3.4vw, 36px) - var(--sec)); }
+/* no divider under the last contact row, so the list sits optically centred */
+.pc-addr > .ln:last-child { border-bottom: 0; }
+/* nav bar and mobile menu: the frosted blur sits on the element itself, not on ::before. Safari (iPhone, iPad, Mac) skips a blur on a pseudo-element behind its parent, and the menu's open animation would block it in every browser */
+.navpill.glass, .mnav.glass { -webkit-backdrop-filter: blur(44px) saturate(1.8); backdrop-filter: blur(44px) saturate(1.8); }
+.navpill.glass { background: linear-gradient(180deg, rgba(248, 248, 251, .28), rgba(248, 248, 251, .5)); }
+.mnav.glass { background: linear-gradient(180deg, rgba(248, 248, 251, .62), rgba(248, 248, 251, .78)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), 0 16px 40px rgba(30, 34, 51, .14); }
+.navpill.glass::before, .mnav.glass::before { content: none; }
+/* real screenshots: same frame as the placeholders, cropped from the top; the lightbox shows the whole image */
+.shot.img { aspect-ratio: 4 / 3; background: var(--surface); border-color: var(--line); }
+.shot.img::before, .shot.img::after { content: none; }
+.shot.img img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+.shot.img.fit { aspect-ratio: auto; }
+.shot.img.fit img { height: auto; }
+.shot.img.phone { aspect-ratio: 9 / 19.5; max-width: none; border-radius: 18px; }
+.grid4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 12px; }
+.grid4.phones { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 560px) { .grid4.phones { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -16px; padding: 0 16px 6px; scrollbar-width: none; } .grid4.phones::-webkit-scrollbar { display: none; } .grid4.phones .shot { flex: 0 0 42%; scroll-snap-align: start; } }
+.lb-scroll { max-height: min(78vh, 900px); overflow: auto; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); }
+.lb-scroll img { display: block; width: 100%; height: auto; }
+.lb-scroll.phonefit { display: flex; justify-content: center; align-items: flex-start; overflow: hidden; padding: 16px; background: linear-gradient(160deg, var(--sky), var(--surface) 60%, var(--leaf)); }
+.lb-scroll.phonefit img { width: auto; height: calc(min(78vh, 900px) - 34px); max-width: 100%; border-radius: 22px; border: 1px solid var(--line); box-shadow: 0 18px 40px rgba(30, 34, 51, .16); }
+.lb-scroll.phonefit.tall { overflow: auto; }
+.lb-scroll.phonefit.tall img { height: auto; width: min(360px, 100%); }
+.lb-scroll.narrow img { width: auto; max-width: 100%; margin: 0 auto; }
+/* keep the nav bar above everything: page content lives in its own layer below the header (Safari can otherwise paint blurred or sticky cards over a sticky header) */
+main { position: relative; z-index: 0; }
+.top { z-index: 50; }
+@media (max-width: 340px) { .ln .ic.sm { display: none; } }
+/* the open menu floats over the page instead of pushing it down */
+.top > .wrap { position: relative; }
+.mnav.glass { position: absolute; top: 100%; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); margin-top: 8px; z-index: 2; }
+.dl-ic { flex: none; }
+</style>
+<style>
+/* project palette */
+:root { --accent: #B2500D; --accent-ink: #873D0A; --accent-soft: #F6E5DA; --sky: #FBDCC6; --leaf: #F6E5DA; }
+/* closing nav + contact card keep the site theme */
+.pn, .cta { --accent: #166C99; --accent-ink: #0F5478; --accent-soft: #D9EEF7; }
+.cover { margin: 28px 0 0; border-radius: 28px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 18px 50px rgba(30, 34, 51, .12); background: var(--surface); }
+.cover img { display: block; width: 100%; height: auto; }
+</style>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
+<div class="sky" aria-hidden="true">
+<i style="width:520px;height:520px;right:-140px;top:-160px;background:var(--leaf)"></i>
+<i style="width:480px;height:480px;left:-160px;top:45vh;background:var(--sky);animation-delay:-8s"></i>
+<i style="width:520px;height:520px;right:-180px;top:150vh;background:var(--mint);animation-delay:-14s"></i>
+</div>
+
+<div class="page">
+<header class="top"><div class="wrap">
+<nav class="navpill glass" aria-label="Main">
+<a class="brand" href="../">Taweeporn</a>
+<div class="links"><a class="cur" href="../#work" aria-current="page"><span aria-hidden="true">←</span> Work</a><a class="hide-sm" href="../#beyond">Visuals</a><a class="hide-sm" href="../about/">About</a><a class="dark" href="#contact">Let's talk</a><button type="button" class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mnav" aria-label="Open menu"><i aria-hidden="true"></i></button></div>
+</nav>
+<nav class="mnav glass" id="mnav" aria-label="Menu" hidden><a href="../#work" aria-current="page">Work<span aria-hidden="true">→</span></a><a href="../#beyond">Visuals<span aria-hidden="true">→</span></a><a href="../about/">About<span aria-hidden="true">→</span></a></nav>
+</div></header>
+
+<main class="wrap">
+<section class="hero" id="top">
+<p class="kick">01 / 04 · REAL ESTATE CRM PLATFORM</p>
+<h1 class="title">Homnect<span>24</span></h1>
+<p class="intro">A CRM platform built for real estate professionals to manage leads, properties, contracts, bookings and team collaboration in one place.</p>
+<div class="chipset"><span><i>ROLE</i>UX/UI Designer</span><span><i>TEAM</i>PM · UX/UI · Devs · QA</span><span><i>DURATION</i>Apr 2025 – Present</span><span><i>PLATFORM</i>Desktop · Responsive</span><span><i>MODULES</i>Marketing site · CRM</span><span><i>SCREENS</i>150+ responsive</span></div>
+<div class="contrib"><span class="cl">WHAT I DID</span><div><span>User Flow</span><span>Wireframes</span><span>UI Design</span><span>Design System</span><span>Responsive Design</span><span>Visual QA</span><span>Developer Handoff</span></div></div>
+<figure class="cover"><img src="cover.webp" alt="Homnect24 cover: the CRM dashboard with the Homnect24 logo" width="1000" height="430"></figure>
+</section>
+
+<div class="layout">
+<aside class="toc glass" aria-label="On this page">
+<p>ON THIS PAGE</p>
+<a href="#overview">Overview</a>
+<a href="#challenges">Key challenges</a>
+<a href="#role">My responsibilities</a>
+<a href="#system">Design system</a>
+<a href="#solution">Final solution</a>
+<a href="#collab">Collaboration</a>
+<a href="#reflection">Reflection</a>
+</aside>
+
+<div class="content">
+
+<section id="overview" class="rv">
+<h2 class="h2">Overview</h2>
+<p class="p"><b style="color:var(--ink)">Homnect24</b> is a CRM platform built for real estate professionals to manage leads, properties, contracts, bookings and team collaboration in one place.</p>
+<p class="p">As the UX/UI Designer, I worked closely with a product manager and developers to translate business and user requirements into easy-to-use experiences. My work included designing user flows, wireframes, responsive UI, and maintaining a scalable design system throughout the product lifecycle.</p>
+</section>
+
+<section id="challenges" class="rv">
+<h2 class="h2">Key challenges</h2>
+<div class="cards3">
+<div class="ch glass"><span class="n">01</span><h3 class="h3">Complex business workflows</h3><p>Lead management, property listings, contracts, bookings and team collaboration live in a single platform. The challenge was to bring them together in one clear, simple experience.</p></div>
+<div class="ch glass"><span class="n">02</span><h3 class="h3">Designing for scalability</h3><p>As the product grew, new features and modules needed to work well with the existing interface while staying consistent across the platform.</p></div>
+<div class="ch glass"><span class="n">03</span><h3 class="h3">Cross-functional collaboration</h3><p>Requirements evolved through ongoing discussions with the product manager and developers, so the design had to turn changing needs into practical solutions.</p></div>
+</div>
+</section>
+
+<section id="role" class="rv">
+<h2 class="h2">My responsibilities</h2>
+<ul class="list">
+<li>Collaborated with a product manager to refine product requirements</li>
+<li>Designed user flows and wireframes</li>
+<li>Created user interface designs</li>
+<li>Built and maintained the design system</li>
+<li>Designed responsive layouts</li>
+<li>Worked closely with developers throughout implementation</li>
+<li>Ran visual QA so builds matched the designs across devices</li>
+<li>Refined designs based on stakeholder feedback</li>
+</ul>
+</section>
+
+<section id="system" class="rv">
+<h2 class="h2">Design system</h2>
+<p class="p">To keep the product consistent, I built and maintained a scalable design system with reusable components, color styles, typography, spacing and interaction patterns.</p>
+<h3 class="h3" style="margin-top:18px">Foundations</h3>
+<div style="display:flex;flex-direction:column;gap:12px;margin-top:10px">
+<button type="button" class="shot img fit" data-cap="Foundations"><img src="shots/t/ds-foundations-800.webp" srcset="shots/t/ds-foundations-800.webp 800w, shots/t/ds-foundations-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/ds-foundations.webp" data-w="1704" data-h="1104" alt="Design system foundations board: typography scale, color palettes, layout grids, spacing scale, shadows, radius and opacity" width="1600" height="1037" loading="lazy" decoding="async"></button>
+<div class="grid2"><button type="button" class="shot img" data-cap="Color variables"><img src="shots/t/ds-color-800.webp" srcset="shots/t/ds-color-800.webp 800w, shots/t/ds-color-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ds-color.webp" data-w="1802" data-h="1650" alt="Figma semantic color variables with light and dark mode values" width="1600" height="1200" loading="lazy" decoding="async"></button><button type="button" class="shot img" data-cap="Typography variables"><img src="shots/t/ds-type-800.webp" srcset="shots/t/ds-type-800.webp 800w, shots/t/ds-type-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/ds-type.webp" data-w="2206" data-h="1652" alt="Figma semantic typography variables for desktop, tablet and mobile" width="1600" height="1198" loading="lazy" decoding="async"></button></div>
+</div>
+<h3 class="h3" style="margin-top:26px">Component library</h3>
+<div class="grid4" style="margin-top:10px">
+<button type="button" class="shot img" data-cap="Card components"><img src="shots/t/c-card-800.webp" srcset="shots/t/c-card-800.webp 800w, shots/t/c-card-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 290px" data-full="shots/c-card.webp" data-w="1920" data-h="1510" alt="Property, customer board and calendar card components" width="1600" height="1200" loading="lazy" decoding="async"></button><button type="button" class="shot img" data-cap="Alert"><img src="shots/t/c-alert-800.webp" srcset="shots/t/c-alert-800.webp 800w, shots/t/c-alert-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 290px" data-full="shots/c-alert.webp" data-w="1940" data-h="1530" alt="Alert component variants" width="1600" height="1200" loading="lazy" decoding="async"></button><button type="button" class="shot img" data-cap="Combobox"><img src="shots/t/c-combobox-800.webp" srcset="shots/t/c-combobox-800.webp 800w, shots/t/c-combobox-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 290px" data-full="shots/c-combobox.webp" data-w="1762" data-h="1444" alt="Combobox component variants" width="1600" height="1200" loading="lazy" decoding="async"></button><button type="button" class="shot img" data-cap="Calendar"><img src="shots/t/c-calendar-800.webp" srcset="shots/t/c-calendar-800.webp 800w, shots/t/c-calendar-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 290px" data-full="shots/c-calendar.webp" data-w="1746" data-h="1508" alt="Calendar and range calendar components" width="1600" height="1200" loading="lazy" decoding="async"></button><button type="button" class="shot img" data-cap="Stepper"><img src="shots/t/c-stepper-800.webp" srcset="shots/t/c-stepper-800.webp 800w, shots/t/c-stepper-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 290px" data-full="shots/c-stepper.webp" data-w="1192" data-h="1294" alt="Stepper component variants" width="1192" height="894" loading="lazy" decoding="async"></button><button type="button" class="shot img" data-cap="Labels &amp; tags"><img src="shots/t/c-labels-800.webp" srcset="shots/t/c-labels-800.webp 800w, shots/t/c-labels-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 290px" data-full="shots/c-labels.webp" data-w="1626" data-h="1322" alt="Label and tag component variants" width="1600" height="1200" loading="lazy" decoding="async"></button><button type="button" class="shot img" data-cap="Input"><img src="shots/t/c-input-800.webp" srcset="shots/t/c-input-800.webp 800w, shots/t/c-input-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 290px" data-full="shots/c-input.webp" data-w="632" data-h="1528" alt="Input field component states" width="632" height="474" loading="lazy" decoding="async"></button><button type="button" class="shot img" data-cap="Time picker"><img src="shots/t/c-timepicker-800.webp" srcset="shots/t/c-timepicker-800.webp 800w, shots/t/c-timepicker-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 290px" data-full="shots/c-timepicker.webp" data-w="1362" data-h="1330" alt="Time picker component states" width="1362" height="1022" loading="lazy" decoding="async"></button>
+</div>
+</section>
+
+<section id="solution" class="rv">
+<h2 class="h2">Final solution</h2>
+<p class="p">A centralized dashboard helps agents monitor leads, property activity and daily performance at a glance.</p>
+<div style="display:flex;flex-direction:column;gap:34px">
+<div class="gsec"><p class="grp"><span>MARKETING SITE</span></p>
+<div class="screen"><div class="meta"><h3 class="h3">Home</h3></div><p class="p" style="margin:0">Introduces the platform, highlights key services, and guides users to explore available properties and features.</p><button type="button" class="shot img" data-cap="Home"><img src="shots/t/home-800.webp" srcset="shots/t/home-800.webp 800w, shots/t/home-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/home.webp" data-w="2400" data-h="7940" alt="Homnect24 marketing home page" width="1600" height="1200" loading="lazy" decoding="async"></button></div>
+<div class="screen"><div class="meta"><h3 class="h3">Feature</h3></div><p class="p" style="margin:0">Presents the platform's key features and benefits in a clear, structured layout.</p><button type="button" class="shot img" data-cap="Feature"><img src="shots/t/feature-800.webp" srcset="shots/t/feature-800.webp 800w, shots/t/feature-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/feature.webp" data-w="2400" data-h="7007" alt="Homnect24 features page" width="1600" height="1200" loading="lazy" decoding="async"></button></div>
+</div>
+<div class="gsec"><p class="grp"><span>CRM</span></p>
+<div class="screen"><div class="meta"><h3 class="h3">Account</h3></div><p class="p" style="margin:0">Lets users manage their profile and account information in one place.</p><button type="button" class="shot img" data-cap="Account"><img src="shots/t/account-800.webp" srcset="shots/t/account-800.webp 800w, shots/t/account-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/account.webp" data-w="2880" data-h="3938" alt="Account and security settings page" width="1600" height="1200" loading="lazy" decoding="async"></button></div>
+<div class="screen"><div class="meta"><h3 class="h3">Dashboard</h3></div><p class="p" style="margin:0">A quick overview of leads, bookings, recent activities and other key information.</p><button type="button" class="shot img" data-cap="Dashboard"><img src="shots/t/dashboard-800.webp" srcset="shots/t/dashboard-800.webp 800w, shots/t/dashboard-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/dashboard.webp" data-w="2880" data-h="2902" alt="CRM dashboard with revenue, sales chart, portfolio and top agents" width="1600" height="1200" loading="lazy" decoding="async"></button></div>
+<div class="screen"><div class="meta"><h3 class="h3">Customer</h3></div><p class="p" style="margin:0">Manage customer information, track lead progress, and follow up with potential customers.</p><button type="button" class="shot img" data-cap="Customer listing"><img src="shots/t/customer-list-800.webp" srcset="shots/t/customer-list-800.webp 800w, shots/t/customer-list-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/customer-list.webp" data-w="2880" data-h="2256" alt="Customer list with interests, budget, status and owner" width="1600" height="1200" loading="lazy" decoding="async"></button><div class="grid2"><button type="button" class="shot img" data-cap="Customer board"><img src="shots/t/customer-board-800.webp" srcset="shots/t/customer-board-800.webp 800w, shots/t/customer-board-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/customer-board.webp" data-w="2880" data-h="2234" alt="Customer pipeline board by status" width="1600" height="1200" loading="lazy" decoding="async"></button><button type="button" class="shot img" data-cap="Customer activity"><img src="shots/t/customer-activity-800.webp" srcset="shots/t/customer-activity-800.webp 800w, shots/t/customer-activity-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/customer-activity.webp" data-w="2880" data-h="2234" alt="Customer detail with activity timeline" width="1600" height="1200" loading="lazy" decoding="async"></button></div></div>
+<div class="screen"><div class="meta"><h3 class="h3">Property</h3></div><p class="p" style="margin:0">Browse, edit and manage property listings with a clear and organized layout.</p><div class="grid2"><button type="button" class="shot img" data-cap="Property list"><img src="shots/t/property-list-800.webp" srcset="shots/t/property-list-800.webp 800w, shots/t/property-list-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/property-list.webp" data-w="2880" data-h="2652" alt="Property list view with location, specs, price and status" width="1600" height="1200" loading="lazy" decoding="async"></button><button type="button" class="shot img" data-cap="Property cards"><img src="shots/t/property-cards-800.webp" srcset="shots/t/property-cards-800.webp 800w, shots/t/property-cards-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/property-cards.webp" data-w="2880" data-h="3064" alt="Property grid view with photo cards" width="1600" height="1200" loading="lazy" decoding="async"></button></div><div class="grid2"><button type="button" class="shot img" data-cap="Property map"><img src="shots/t/property-map-800.webp" srcset="shots/t/property-map-800.webp 800w, shots/t/property-map-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/property-map.webp" data-w="2880" data-h="2234" alt="Property map view with listing preview" width="1600" height="1200" loading="lazy" decoding="async"></button><button type="button" class="shot img" data-cap="Property activity"><img src="shots/t/property-activity-800.webp" srcset="shots/t/property-activity-800.webp 800w, shots/t/property-activity-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/property-activity.webp" data-w="2880" data-h="2234" alt="Property detail with activity timeline" width="1600" height="1200" loading="lazy" decoding="async"></button></div></div>
+<div class="screen"><div class="meta"><h3 class="h3">Contracts</h3></div><p class="p" style="margin:0">View and manage contract details throughout the sales process.</p><div class="grid2"><button type="button" class="shot img" data-cap="Contracts grid"><img src="shots/t/contracts-grid-800.webp" srcset="shots/t/contracts-grid-800.webp 800w, shots/t/contracts-grid-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/contracts-grid.webp" data-w="2880" data-h="2432" alt="Documents and contracts in grid view" width="1600" height="1200" loading="lazy" decoding="async"></button><button type="button" class="shot img" data-cap="Contracts list"><img src="shots/t/contracts-list-800.webp" srcset="shots/t/contracts-list-800.webp 800w, shots/t/contracts-list-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 430px" data-full="shots/contracts-list.webp" data-w="2880" data-h="2448" alt="Documents and contracts in list view" width="1600" height="1200" loading="lazy" decoding="async"></button></div></div>
+<div class="screen"><div class="meta"><h3 class="h3">Calendar</h3></div><p class="p" style="margin:0">Manage appointments and tasks in one calendar, making it easier to plan daily work and keep track of upcoming activities.</p><button type="button" class="shot img" data-cap="Calendar"><img src="shots/t/calendar-800.webp" srcset="shots/t/calendar-800.webp 800w, shots/t/calendar-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/calendar.webp" data-w="2880" data-h="2352" alt="Month calendar with the day&#x27;s appointments" width="1600" height="1200" loading="lazy" decoding="async"></button></div>
+<div class="screen"><div class="meta"><h3 class="h3">Chat</h3></div><p class="p" style="margin:0">Communicate with team members and customers in one place without leaving the platform.</p><button type="button" class="shot img" data-cap="Chat"><img src="shots/t/chat-800.webp" srcset="shots/t/chat-800.webp 800w, shots/t/chat-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/chat.webp" data-w="2880" data-h="2234" alt="Chat inbox with conversation and customer details" width="1600" height="1200" loading="lazy" decoding="async"></button></div>
+<div class="screen"><div class="meta"><h3 class="h3">Notifications</h3></div><p class="p" style="margin:0">Stay updated with important activities and system reminders.</p><button type="button" class="shot img" data-cap="Notifications"><img src="shots/t/notifications-800.webp" srcset="shots/t/notifications-800.webp 800w, shots/t/notifications-1600.webp 1600w" sizes="(max-width: 700px) 92vw, 870px" data-full="shots/notifications.webp" data-w="2880" data-h="2784" alt="Notification center grouped by day" width="1600" height="1200" loading="lazy" decoding="async"></button></div>
+</div>
+<div class="gsec"><p class="grp"><span>MOBILE</span></p>
+<div class="screen"><div class="meta"><h3 class="h3">Responsive screens</h3></div><p class="p" style="margin:0">Every screen adapts to mobile, from the marketing site to the CRM dashboard.</p><div class="grid4 phones"><button type="button" class="shot img phone" data-cap="Mobile · home"><img src="shots/t/m-home-800.webp" srcset="shots/t/m-home-800.webp 800w, shots/t/m-home-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-home.webp" data-w="1500" data-h="3248" alt="Marketing home page on mobile" width="1500" height="3248" loading="lazy" decoding="async"></button><button type="button" class="shot img phone" data-cap="Mobile · pricing"><img src="shots/t/m-pricing-800.webp" srcset="shots/t/m-pricing-800.webp 800w, shots/t/m-pricing-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-pricing.webp" data-w="1500" data-h="3248" alt="Pricing page on mobile" width="1500" height="3248" loading="lazy" decoding="async"></button><button type="button" class="shot img phone" data-cap="Mobile · FAQ"><img src="shots/t/m-faq-800.webp" srcset="shots/t/m-faq-800.webp 800w, shots/t/m-faq-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-faq.webp" data-w="1500" data-h="3248" alt="FAQ page on mobile" width="1500" height="3248" loading="lazy" decoding="async"></button><button type="button" class="shot img phone" data-cap="Mobile · workspaces"><img src="shots/t/m-workspace-800.webp" srcset="shots/t/m-workspace-800.webp 800w, shots/t/m-workspace-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-workspace.webp" data-w="1500" data-h="3248" alt="My workspaces page on mobile" width="1500" height="3248" loading="lazy" decoding="async"></button><button type="button" class="shot img phone" data-cap="Mobile · dashboard"><img src="shots/t/m-dashboard-800.webp" srcset="shots/t/m-dashboard-800.webp 800w, shots/t/m-dashboard-1600.webp 1600w" sizes="(max-width: 560px) 45vw, 240px" data-full="shots/m-dashboard.webp" data-w="1492" data-h="3245" alt="CRM dashboard on mobile" width="1492" height="3233" loading="lazy" decoding="async"></button></div></div>
+</div>
+</div>
+</section>
+
+<section id="collab" class="rv">
+<h2 class="h2">Collaboration</h2>
+<p class="p">Throughout the project, I collaborated closely with a product manager and developers to refine requirements, clarify interactions, and ensure production-ready implementation. Regular discussions and iterative feedback helped align business goals with practical design solutions.</p>
+</section>
+
+<section id="reflection" class="rv">
+<h2 class="h2">Reflection</h2>
+<p class="lead-r">Designing Homnect24 strengthened my ability to translate business requirements into scalable digital products.</p>
+<p class="p">It also improved my skills in design systems, cross-functional collaboration, and keeping a multi-module platform easy to use.</p>
+</section>
+
+<nav class="pn rv" aria-label="More projects"><a class="next prev glass" href="../24xscore/"><span class="go" aria-hidden="true">←</span><span><small>PREVIOUS PROJECT</small><b>24xScore</b></span></a><a class="next glass" href="../homes-in-th/"><span><small>NEXT PROJECT</small><b>Homes in TH</b></span><span class="go" aria-hidden="true">→</span></a></nav>
+
+<section id="contact" class="rv" aria-label="Contact">
+<div class="pc compact" aria-labelledby="pc-h">
+<div class="pc-msg">
+<p class="pc-hi">Let's talk,</p>
+<h2 class="pc-h" id="pc-h">Always open to something new.</h2>
+<p class="pc-sig">— Taweeporn</p>
+<p class="pc-loc">Bangkok, Thailand · GMT+7</p>
+</div>
+<div class="pc-addr">
+<span class="stamp" aria-hidden="true"><b>BKK</b>THAILAND</span>
+<div class="ln"><span class="ic sm"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7.5l8 5.5 8-5.5"/></svg></span><span class="lt"><small>EMAIL</small><span class="addr" >taweeporn.treewi@gmail.com</span></span><button class="copyic" id="copymail" type="button" aria-label="Copy email address" title="Copy email"><svg class="cp" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/><path d="M15.5 8.5V6a2.5 2.5 0 0 0-2.5-2.5H6A2.5 2.5 0 0 0 3.5 6v7A2.5 2.5 0 0 0 6 15.5h2.5"/></svg><svg class="ck" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><span class="tip" role="status" aria-live="polite"></span></div>
+<a class="ln" href="tel:0650988909"><span class="ic sm"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span><span class="lt"><small>PHONE</small>065 098 8909</span><span class="go" aria-hidden="true">↗</span></a>
+<a class="ln" href="https://www.linkedin.com/in/taweeporn-treewichayapong-579169401" target="_blank" rel="noopener"><span class="ic li sm"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i><svg class="fb" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2"/><path d="M6.5 16a3 3 0 0 1 5 0M14 10h4M14 14h3"/></svg></span><span class="lt"><small>LINKEDIN</small>Taweeporn Treewichayapong</span><span class="go" aria-hidden="true">↗</span></a>
+</div>
+</div>
+</section>
+
+<footer><span>© 2026 Taweeporn Treewichayapong</span><a href="#top">Back to top ↑</a></footer>
+</div>
+</div>
+</main>
+</div>
+
+<dialog class="lb" id="lb" aria-labelledby="lbt">
+<div class="lb-in">
+<div class="lb-art" id="lbart"></div>
+<div class="lb-cap"><div><b id="lbt"></b><br><small id="lbm" style="color:var(--muted)"></small></div><button type="button" class="dark" id="lbx">Close</button></div>
+</div>
+</dialog>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* scroll progress */
+  var bar = document.getElementById('progress');
+  function prog() { var h = document.documentElement.scrollHeight - innerHeight; bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(1, scrollY / h) : 0) + ')'; }
+  addEventListener('scroll', prog, { passive: true }); addEventListener('resize', prog); prog();
+  /* contents highlight */
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var map = {}; links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { links.forEach(function (a) { a.classList.remove('on'); }); var a = map[e.target.id]; if (a) a.classList.add('on'); } });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    Object.keys(map).forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+  }
+  /* lightbox */
+  var lb = document.getElementById('lb'), art = document.getElementById('lbart');
+  document.querySelectorAll('.shot').forEach(function (s) {
+    s.addEventListener('click', function () {
+      art.innerHTML = ''; var im = s.querySelector('img');
+      if (im) { var fw = +im.dataset.w || im.naturalWidth, fh = +im.dataset.h || im.naturalHeight; var w = document.createElement('div'); var ph = s.classList.contains('phone'); w.className = 'lb-scroll' + (ph ? ' phonefit' + (fw && fh / fw > 3.2 ? ' tall' : '') : (fw && fw < fh / 1.6 ? ' narrow' : '')); var big = new Image(); big.alt = im.alt; if (im.dataset.full) { if (fw && fh) { big.width = fw; big.height = fh; } big.src = im.dataset.full; } else { big.src = im.currentSrc || im.src; } w.appendChild(big); art.appendChild(w); }
+      else { var c = s.cloneNode(true); c.classList.remove('tall', 'wide'); c.removeAttribute('data-cap'); c.setAttribute('tabindex', '-1'); art.appendChild(c); }
+      document.getElementById('lbt').textContent = s.getAttribute('data-cap');
+      document.getElementById('lbm').textContent = im ? '' : 'Placeholder for ' + s.getAttribute('data-file');
+      if (lb.showModal) lb.showModal(); else lb.setAttribute('open', '');
+    });
+  });
+  function closeLb() { if (lb.close) lb.close(); else lb.removeAttribute('open'); }
+  document.getElementById('lbx').addEventListener('click', closeLb);
+  lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+  /* copy email */
+})();
+</script>
+<script>
+(function () {
+  var btn = document.getElementById('menuBtn'), nav = document.getElementById('mnav');
+  if (!btn || !nav) return;
+  function setOpen(o) { btn.setAttribute('aria-expanded', o ? 'true' : 'false'); btn.setAttribute('aria-label', o ? 'Close menu' : 'Open menu'); if (o) nav.removeAttribute('hidden'); else nav.setAttribute('hidden', ''); }
+  btn.addEventListener('click', function (e) { e.stopPropagation(); setOpen(nav.hasAttribute('hidden')); });
+  nav.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
+  document.addEventListener('click', function (e) { if (!nav.hasAttribute('hidden') && !nav.contains(e.target) && e.target !== btn) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !nav.hasAttribute('hidden')) { setOpen(false); btn.focus(); } });
+  window.addEventListener('resize', function () { if (window.innerWidth > 620) setOpen(false); });
+})();
+</script>
+<script>
+/* copy email: Clipboard API, falls back to execCommand, then to selecting the text */
+(function () {
+  var EMAIL = 'taweeporn.treewi@gmail.com';
+  function legacy(t) { var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none'; document.body.appendChild(ta); ta.select(); try { ta.setSelectionRange(0, t.length); } catch (e) {} var ok = false; try { ok = document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); return ok; }
+  function copy(t) { return new Promise(function (res, rej) { if (legacy(t)) return res(); var done = false; function ok() { if (!done) { done = true; res(); } } function no() { if (!done) { done = true; rej(); } } try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(ok, no); setTimeout(no, 1200); } else no(); } catch (e) { no(); } }); }
+  document.querySelectorAll('.copyic').forEach(function (btn) {
+    var tip = btn.parentNode.querySelector('.tip'), t0;
+    function show(msg, ok) { clearTimeout(t0); if (tip) tip.textContent = msg; btn.classList.toggle('ok', ok); btn.classList.add('tipon'); btn.setAttribute('aria-label', ok ? 'Email copied' : 'Copy email address'); t0 = setTimeout(function () { btn.classList.remove('ok', 'tipon'); btn.setAttribute('aria-label', 'Copy email address'); }, 1800); }
+    btn.addEventListener('click', function () {
+      copy(EMAIL).then(function () { show('Copied!', true); }, function () {
+        var a = btn.parentNode.querySelector('.addr'); if (a) { var r = document.createRange(); r.selectNodeContents(a); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+        show('Press \u2318C or Ctrl+C', false);
+      });
+    });
+  });
+})();
+</script>
+<script>
+/* keep the email on one line: if it is wider than its space (small phones), scale its font down just enough to fit */
+(function () {
+  var els = document.querySelectorAll('.ln .addr');
+  function fit() { els.forEach(function (a) { a.style.fontSize = ''; var cw = a.clientWidth, sw = a.scrollWidth; if (cw > 0 && sw > cw) { var fs = parseFloat(getComputedStyle(a).fontSize); a.style.fontSize = Math.max(11, Math.floor(fs * cw / sw * 10) / 10 - 0.2) + 'px'; } }); }
+  fit(); window.addEventListener('resize', fit); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit); window.addEventListener('load', fit);
+})();
+</script>
+<script>(function(){var gs=[].slice.call(document.querySelectorAll('.grp'));if(!gs.length)return;var t=0;function f(){t=0;gs.forEach(function(g){var top=parseFloat(getComputedStyle(g).top)||0;var r=g.getBoundingClientRect();g.classList.toggle('stuck',r.top<=top+1&&g.parentNode.getBoundingClientRect().bottom>r.bottom+8);});}addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(f);},{passive:true});addEventListener('resize',f);f();})();</script>
+
+</html>
