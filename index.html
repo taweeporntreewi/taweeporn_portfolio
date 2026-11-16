@@ -538,6 +538,8 @@ main { position: relative; z-index: 0; }
 .top > .wrap { position: relative; }
 .mnav.glass { position: absolute; top: 100%; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); margin-top: 8px; z-index: 2; }
 .dl-ic { flex: none; }
+/* nav bar uses the same line height as About and the case pages, so the bar is the same height on every page */
+.navpill, .mnav { line-height: 1.65; }
 </style>
 
 <div class="sky" aria-hidden="true">
